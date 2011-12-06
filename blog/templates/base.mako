@@ -13,10 +13,10 @@
         <meta name="keywords" content="python web application" />
         <meta name="description" content="pyramid web application" />
         <link rel="shortcut icon"
-        href="${request.static_url('blog:static/favicon.ico')}" />
-        <link href="${request.static_url('blog:static/js/google-code-prettify/prettify.css')}" type="text/css" rel="stylesheet" />
-        <link href="${request.static_url('blog:static/css/bootstrap.css')}" rel="stylesheet"/>
-        <script type="text/javascript" src="${request.static_url('blog:static/js/google-code-prettify/prettify.js')}" ></script>
+        href="/static/favicon.ico" />
+        <link href="/static/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+        <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+        <script type="text/javascript" src="/static/js/google-code-prettify/prettify.js" ></script>
 
         <%block name="css">
 
