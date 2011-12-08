@@ -73,7 +73,7 @@ def populate():
         session.add(tag)
         category = Category(name='Foo bar')
         session.add(category)
-        post = Post(title='Hello world', content='welcome\n=======\n- hello world!\n- Burn it',
+        post = Post(title='Hello world', content='welcome\n----------\n- hello world!\n- reStructText cool!',
                 timestamp=time.time(), date=datetime.datetime.today())
         post.tags.append(tag)
         post.category = category

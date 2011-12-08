@@ -13,7 +13,7 @@
     </head>
 
 
-    <body>
+    <body onload="prettyPrint()" >
 
         <div id="header">
             <div class="innerwrap">
@@ -58,7 +58,7 @@
                             <span class="post-date">
                                 ${datetime.datetime.fromtimestamp(entry.timestamp).strftime("%b %d %Y %H:%M:%S")}
                             </span>
-                            <span class="post-categories">in <a href="http://learnmongo.com/posts/category/announcements/" title="View all posts in Announcements" rel="category tag">Announcements</a>, <a href="http://learnmongo.com/posts/category/mongoseattle/" title="View all posts in MongoSeattle" rel="category tag">MongoSeattle</a></span>
+                            <span class="post-categories">in <a href="#" title="">${entry.category.name}</a>, <a href="" title="" ></a></span>
                         </div>
 
 
@@ -99,7 +99,7 @@
 
                             <li class="widget">
                             <h2>Search LearnMongo</h2>
-                            <form method="get" id="searchform" action="file://localhost/Users/vincent/Documents/tmp/LearnMongo.com_files/LearnMongo.com.html">
+                            <form method="get" id="searchform" action="">
                                 <input type="text" onfocus="if (this.value == &#39;Search&#39;) {this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;) {this.value = &#39;Search&#39;;}" value="Search" name="s">
                             </form>
                             </li>
@@ -107,7 +107,7 @@
 
 
 
-                            <li class="widget"><h2>Follow Us on Twitter!</h2>			<div class="textwidget"><p><a href="https://twitter.com/LearnMongo" class="twitter-follow-button" data-show-count="false">Follow @LearnMongo</a><br>
+                            <li class="widget"><h2>Follow Me on Twitter!</h2>			<div class="textwidget"><p><a href="https://twitter.com/vincentwv" class="twitter-follow-button" data-show-count="false">Follow @vincentwv</a><br>
                                 </p>
                             </div>
                             </li>
@@ -115,7 +115,7 @@
                             <li class="widget">
                             <h2>Speaking</h2>	
                             <div class="textwidget">
-                                <a href="http://www.10gen.com/conferences/mongola2011"><img style="width:75%;" src="/static/image/mongoLA_badge_blank.png"></a>
+                                <a href=""><img style="width:75%;" src="/static/image/mongoLA_badge_blank.png"></a>
                                 <br></div>
                             </li>
 
