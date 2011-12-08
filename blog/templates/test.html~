@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0064)file://localhost/Users/vincent/Documents/tmp/LearnMongo.com.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head profile="http://gmpg.org/xfn/11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Vincent's Notes</title>
+
+        <link rel="stylesheet" href="../../Vincent's Notes_files/style.css" type="text/css" media="all">
+
+
+        <link rel="stylesheet" id="tweet_stream_style-css" href="./Vincent's Notes_files/tweet_stream.css" type="text/css" media="all">
+    </head>
+
+
+    <body>
+
+        <div id="header">
+            <div class="innerwrap">
+                <div id="menu">
+                    <ul>
+                        <li><a href="http://learnmongo.com/videos/" title="Intro to MongoDB">About</a></li>
+                        <li><a href="http://learnmongo.com/videos/" title="Intro to MongoDB">Git hub</a></li>
+                        <li><a href="http://learnmongo.com/feed/rss2/" class="subscribe">Subscribe</a></li>
+                    </ul>
+                </div>
+
+                <h1>
+                    <a href="file://localhost/Users/vincent/Documents/tmp/LearnMongo.com_files/LearnMongo.com.html">
+                        <span class="vincent">Vincent</span>
+                        <span class="blog">blog</span>
+                        <!--<img src="./LearnMongo.com_files/blogheader_new.png" title="Resources for Learning and Mastering MongoDB" style="border:0px;">-->
+                </a></h1>
+                <!--<h4>Resources for Learning and Mastering MongoDB</h4>-->
+            </div>
+        </div>
+
+
+
+        <div id="main">
+
+            <div class="innerwrap">
+
+                <div id="c1">
+
+
+
+
+                    <!-- post -->
+                    <div class="" id="post-1143">
+
+                            <div class="post-title">
+                                <h1><a href="http://learnmongo.com/posts/mongo-seattle-2011/" rel="bookmark">PLY (Python Lex-Yacc)</a></h1>
+                                <span class="post-date">9 Nov, 2011</span>
+                                <span class="post-categories">in <a href="http://learnmongo.com/posts/category/announcements/" title="View all posts in Announcements" rel="category tag">Announcements</a>, <a href="http://learnmongo.com/posts/category/mongoseattle/" title="View all posts in MongoSeattle" rel="category tag">MongoSeattle</a></span>
+                            </div>
+
+
+                        <div class="post-text">
+
+<div class="document">
+<p>David M. Beazley
+<a class="reference external" href="mailto:dave@dabeaz.com">dave@dabeaz.com</a>
+PLY Version: 3.4</p>
+<ul>
+<li><p class="first">Preface and Requirements</p>
+</li>
+<li><p class="first">Introduction</p>
+</li>
+<li><p class="first">PLY Overview</p>
+</li>
+<li><dl class="first docutils">
+<dt>Lex</dt>
+<dd><ul class="first last simple">
+<li>Lex Example</li>
+<li>The tokens list</li>
+<li>Specification of tokens</li>
+<li>Token values</li>
+<li>Discarded tokens</li>
+<li>Line numbers and positional information</li>
+<li>Ignored characters</li>
+<li>Literal characters</li>
+<li>Error handling</li>
+<li>Building and using the lexer</li>
+<li>The @TOKEN decorator</li>
+<li>Optimized mode</li>
+<li>Debugging</li>
+<li>Alternative specification of lexers</li>
+<li>Maintaining state</li>
+<li>Lexer cloning</li>
+<li>Internal lexer state</li>
+<li>Conditional lexing and start conditions</li>
+<li>Miscellaneous Issues</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Parsing basics</p>
+</li>
+<li><dl class="first docutils">
+<dt>Yacc</dt>
+<dd><ul class="first last">
+<li><p class="first">An example</p>
+</li>
+<li><p class="first">Combining Grammar Rule Functions</p>
+</li>
+<li><p class="first">Character Literals</p>
+</li>
+<li><p class="first">Empty Productions</p>
+</li>
+<li><p class="first">Changing the starting symbol</p>
+</li>
+<li><p class="first">Dealing With Ambiguous Grammars</p>
+</li>
+<li><p class="first">The parser.out file</p>
+</li>
+<li><dl class="first docutils">
+<dt>Syntax Error Handling</dt>
+<dd><ul class="first last simple">
+<li>Recovery and resynchronization with error rules</li>
+<li>Panic mode recovery</li>
+<li>Signaling an error from a production</li>
+<li>General comments on error handling</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Line Number and Position Tracking</p>
+</li>
+<li><p class="first">AST Construction</p>
+</li>
+<li><p class="first">Embedded Actions</p>
+</li>
+<li><p class="first">Miscellaneous Yacc Notes</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Multiple Parsers and Lexers</p>
+</li>
+<li><p class="first">Using Python's Optimized Mode</p>
+</li>
+<li><dl class="first docutils">
+<dt>Advanced Debugging</dt>
+<dd><ul class="first last simple">
+<li>Debugging the lex() and yacc() commands</li>
+<li>Run-time Debugging</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Where to go from here?</p>
+</li>
+</ul>
+<div class="section" id="preface-and-requirements">
+<h1>1. Preface and Requirements</h1>
+<p>This document provides an overview of lexing and parsing with PLY. Given the intrinsic complexity of parsing, I would strongly advise that you read (or at least skim) this entire document before jumping into a big development project with PLY.</p>
+<p>PLY-3.0 is compatible with both Python 2 and Python 3. Be aware that Python 3 support is new and has not been extensively tested (although all of the examples and unit tests pass under Python 3.0). If you are using Python 2, you should try to use Python 2.4 or newer. Although PLY works with versions as far back as Python 2.2, some of its optional features require more modern library modules.</p>
+</div>
+<div class="section" id="introduction">
+<h1>2. Introduction</h1>
+<p>PLY 是流行的编译器构建工具 Lex &amp; Yacc 的纯Python实现. PLY 遵循Lex/Yacc的工作机制, 支持LALR(我的理解是 预处理LR语法分析)分析器, 提供输入验证, 错误报告, 语法诊断. 因此如果准备在其它语言中使用Yacc, 最简洁的办法就是使用PLY.</p>
+<p>作者2001年在University of Chicago讲授编译器课程时开发了早期版本的PLY. 在当时的课程中, 学生需要构建一个类似Pascal的语言, 这个语言的编译器用Python实现, 且必须包括词法分析, 语法分析, 类型检查, 类型判断, 作用域嵌套等, 并最终为SPARC(SUN公司的一款处理器)处理器生成可执行代码. 该课程最终有30个编译器完成. 而同学们在完成过程中遇到了很多PLY所面对的常见问题. 从2001年开始, PLY持续改进, 到PLY-3.0, 又进行了重构以因应未来发展.</p>
+<p>本文档要求并假定读者具有编译理论的基础知识, 了解lex/yacc的用法. 否则建议先阅读参考书籍:  "Compilers: Principles, Techniques, and Tools", by Aho, Sethi, and Ullman. O'Reilly's "Lex and Yacc" by John Levine. 实际上后者几乎可作为PLY的理论参考.</p>
+</div>
+<div class="section" id="ply-overview">
+<h1>3. PLY Overview</h1>
+<p>PLY包含两个module: lex.py / yacc.py, lex.py用正则表达式将程序语句解析成连续的token, yacc.py用指定语法去"理解"程序语句. yacc.py使用LALR或SLR算法生成语法分析表.</p>
+<p>lex.py可以通过定义token函数的方式进行扩展, 以进行自定义的词法分析, yacc.py利用lex.py得到token和定义的语法规则生成Abstract Syntax Tree(AST 抽象语法树). 当然, 用户也可以使用yacc.py直接实现简单的编译器.</p>
+<p>yacc.py也提供大部分Unix下的yacc具备的功能, 包括错误检查, 语法(grammar)检验, token检验, support for empty productions, ambiguity resolution via precedence rules(这俩能看懂就行, 不乱翻) 等. 实际上, PLY能够支持Unix Yacc的所有功能.</p>
+</div>
+<div class="section" id="lex">
+<h1>4. Lex</h1>
+<p>lex.py用于将字符串解析为token.
+假设你正在写一个编程语言, 用户提供了以下输入字符串:</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+x </span><span class="pun">=</span><span class="pln"> </span><span class="lit">3</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="lit">42</span><span class="pln"> </span><span class="pun">*</span><span class="pln"> </span><span class="pun">(</span><span class="pln">s </span><span class="pun">-</span><span class="pln"> t</span><span class="pun">)</span></pre>
+<p>将以上字符串解析为独立的token</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+</span><span class="str">'x'</span><span class="pun">,</span><span class="str">'='</span><span class="pun">,</span><span class="pln"> </span><span class="str">'3'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'+'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'42'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'*'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'('</span><span class="pun">,</span><span class="pln"> </span><span class="str">'s'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'-'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'t'</span><span class="pun">,</span><span class="pln"> </span><span class="str">')'</span></pre>
+<p>首先需要识别这些token的类型. 例如:</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+</span><span class="str">'ID'</span><span class="pun">,</span><span class="str">'EQUALS'</span><span class="pun">,</span><span class="str">'NUMBER'</span><span class="pun">,</span><span class="str">'PLUS'</span><span class="pun">,</span><span class="str">'NUMBER'</span><span class="pun">,</span><span class="str">'TIMES'</span><span class="pun">,</span><span class="pln">
+</span><span class="str">'LPAREN'</span><span class="pun">,</span><span class="str">'ID'</span><span class="pun">,</span><span class="str">'MINUS'</span><span class="pun">,</span><span class="str">'ID'</span><span class="pun">,</span><span class="str">'RPAREN'</span></pre>
+<p>以上用户输入被解析为如下token(类型/值):</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+</span><span class="pun">(</span><span class="str">'ID'</span><span class="pun">,</span><span class="str">'x'</span><span class="pun">),</span><span class="pln"> </span><span class="pun">(</span><span class="str">'EQUALS'</span><span class="pun">,</span><span class="str">'='</span><span class="pun">),</span><span class="pln"> </span><span class="pun">(</span><span class="str">'NUMBER'</span><span class="pun">,</span><span class="str">'3'</span><span class="pun">),</span><span class="pln">
+</span><span class="pun">(</span><span class="str">'PLUS'</span><span class="pun">,</span><span class="str">'+'</span><span class="pun">),</span><span class="pln"> </span><span class="pun">(</span><span class="str">'NUMBER'</span><span class="pun">,</span><span class="str">'42), ('</span><span class="pln">TIMES</span><span class="str">','</span><span class="pun">*</span><span class="str">'),
+('</span><span class="pln">LPAREN</span><span class="str">','</span><span class="pun">(</span><span class="str">'), ('</span><span class="pln">ID</span><span class="str">','</span><span class="pln">s</span><span class="str">'), ('</span><span class="pln">MINUS</span><span class="str">','</span><span class="pun">-</span><span class="str">'),
+('</span><span class="pln">ID</span><span class="str">','</span><span class="pln">t</span><span class="str">'), ('</span><span class="pln">RPAREN</span><span class="str">','</span><span class="pun">)</span><span class="str">'</span></pre>
+<p>通常情况下, 可以使用正则表达式来标示这些token, 下一节将介绍使用lex.py来达成这个目标.</p>
+<div class="section" id="lex-example">
+<h2>4.1 Lex Example</h2>
+<p>以下代码使用lex.py完成一个简单的词法分析器.</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+</span><span class="com"># ------------------------------------------------------------</span><span class="pln">
+</span><span class="com"># calclex.py</span><span class="pln">
+</span><span class="com">#</span><span class="pln">
+</span><span class="com"># tokenizer for a simple expression evaluator for</span><span class="pln">
+</span><span class="com"># numbers and +,-,*,/</span><span class="pln">
+</span><span class="com"># ------------------------------------------------------------</span><span class="pln">
+</span><span class="kwd">import</span><span class="pln"> ply</span><span class="pun">.</span><span class="pln">lex </span><span class="kwd">as</span><span class="pln"> lex
+
+</span><span class="com"># List of token names.   This is always required</span><span class="pln">
+tokens </span><span class="pun">=</span><span class="pln"> </span><span class="pun">(</span><span class="pln">
+   </span><span class="str">'NUMBER'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'PLUS'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'MINUS'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'TIMES'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'DIVIDE'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'LPAREN'</span><span class="pun">,</span><span class="pln">
+   </span><span class="str">'RPAREN'</span><span class="pun">,</span><span class="pln">
+</span><span class="pun">)</span><span class="pln">
+
+</span><span class="com"># Regular expression rules for simple tokens</span><span class="pln">
+t_PLUS    </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'\+'</span><span class="pln">
+t_MINUS   </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'-'</span><span class="pln">
+t_TIMES   </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'\*'</span><span class="pln">
+t_DIVIDE  </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'/'</span><span class="pln">
+t_LPAREN  </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'\('</span><span class="pln">
+t_RPAREN  </span><span class="pun">=</span><span class="pln"> r</span><span class="str">'\)'</span><span class="pln">
+
+</span><span class="com"># A regular expression rule with some action code</span><span class="pln">
+</span><span class="kwd">def</span><span class="pln"> t_NUMBER</span><span class="pun">(</span><span class="pln">t</span><span class="pun">):</span><span class="pln">
+    r</span><span class="str">'\d+'</span><span class="pln">
+    t</span><span class="pun">.</span><span class="pln">value </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">int</span><span class="pun">(</span><span class="pln">t</span><span class="pun">.</span><span class="pln">value</span><span class="pun">)</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> t
+
+</span><span class="com"># Define a rule so we can track line numbers</span><span class="pln">
+</span><span class="kwd">def</span><span class="pln"> t_newline</span><span class="pun">(</span><span class="pln">t</span><span class="pun">):</span><span class="pln">
+    r</span><span class="str">'\n+'</span><span class="pln">
+    t</span><span class="pun">.</span><span class="pln">lexer</span><span class="pun">.</span><span class="pln">lineno </span><span class="pun">+=</span><span class="pln"> len</span><span class="pun">(</span><span class="pln">t</span><span class="pun">.</span><span class="pln">value</span><span class="pun">)</span><span class="pln">
+
+</span><span class="com"># A string containing ignored characters (spaces and tabs)</span><span class="pln">
+t_ignore  </span><span class="pun">=</span><span class="pln"> </span><span class="str">' \t'</span><span class="pln">
+
+</span><span class="com"># Error handling rule</span><span class="pln">
+</span><span class="kwd">def</span><span class="pln"> t_error</span><span class="pun">(</span><span class="pln">t</span><span class="pun">):</span><span class="pln">
+    </span><span class="kwd">print</span><span class="pln"> </span><span class="str">"Illegal character '%s'"</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> t</span><span class="pun">.</span><span class="pln">value</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln">
+    t</span><span class="pun">.</span><span class="pln">lexer</span><span class="pun">.</span><span class="pln">skip</span><span class="pun">(</span><span class="lit">1</span><span class="pun">)</span><span class="pln">
+
+</span><span class="com"># Build the lexer</span><span class="pln">
+lexer </span><span class="pun">=</span><span class="pln"> lex</span><span class="pun">.</span><span class="pln">lex</span><span class="pun">()</span></pre>
+<p>使用这个词法分析器, //input()//函数输入待处理语句, //token()//函数按次序返回token:</p>
+<pre class="literal-block prettyprint"><span class="com">#!/usr/bin/env python</span><span class="pln">
+</span><span class="com"># Test it out</span><span class="pln">
+data </span><span class="pun">=</span><span class="pln"> </span><span class="str">'''
+3 + 4 * 10
+  + -20 *2
+'''</span><span class="pln">
+
+</span><span class="com"># Give the lexer some input</span><span class="pln">
+lexer</span><span class="pun">.</span><span class="pln">input</span><span class="pun">(</span><span class="pln">data</span><span class="pun">)</span><span class="pln">
+
+</span><span class="com"># Tokenize</span><span class="pln">
+</span><span class="kwd">while</span><span class="pln"> </span><span class="kwd">True</span><span class="pun">:</span><span class="pln">
+    tok </span><span class="pun">=</span><span class="pln"> lexer</span><span class="pun">.</span><span class="pln">token</span><span class="pun">()</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="kwd">not</span><span class="pln"> tok</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">break</span><span class="pln">      </span><span class="com"># No more input</span><span class="pln">
+    </span><span class="kwd">print</span><span class="pln"> tok</span></pre>
+</div>
+</div>
+</div>
+
+
+                        </div>
+
+                            <div class="post-pages"></div>
+                        <div class="post-foot">
+                            <a href="http://learnmongo.com/posts/mongo-seattle-2011/#disqus_thread" class="comments-link" title="Comment on Mongo Seattle 2011" data-disqus-identifier="1143 http://learnmongo.com/?p=1143">0 Comments and 0 Reactions</a>				<div class="post-meta">
+                                <div class="post-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- column right -->
+                <div id="c2">
+
+                    <div id="sidebar">
+
+                        <ul id="widgets">
+
+                            <li class="widget">
+                            <h2>Search LearnMongo</h2>
+                            <form method="get" id="searchform" action="file://localhost/Users/vincent/Documents/tmp/LearnMongo.com_files/LearnMongo.com.html">
+                                <input type="text" onfocus="if (this.value == &#39;Search&#39;) {this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;) {this.value = &#39;Search&#39;;}" value="Search" name="s">
+                                </form>
+                                </li>
+                                
+                                
+                                
+                                
+                                <li class="widget"><h2>Follow Us on Twitter!</h2>			<div class="textwidget"><p><a href="https://twitter.com/LearnMongo" class="twitter-follow-button" data-show-count="false">Follow @LearnMongo</a><br>
+                                <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script></p>
+                            </div>
+                            </li>
+                            
+                            <li class="widget">
+                            <h2>Speaking</h2>	
+                            <div class="textwidget">
+                                <a href="http://www.10gen.com/conferences/mongola2011"><img style="width:75%;" src="./Vincent's Notes_files/mongoLA_badge_blank.png"></a>
+                        <br></div>
+                    </li>
+                    
+                    
+                <li class="widget"><h2>Categories</h2>	
+                <ul>
+                <li class="cat-item cat-item-6"><a href="http://learnmongo.com/posts/category/administration/" title="View all posts filed under Administration">Administration</a> (6)
+                </li>
+                <li class="cat-item cat-item-3"><a href="http://learnmongo.com/posts/category/announcements/" title="View all posts filed under Announcements">Announcements</a> (3)
+                </li>
+            </ul>
+            </li>		
+            
+            
+            
+            <li class="widget">	
+            <h2>Recent Posts</h2>	
+            <ul>
+            <li><a href="http://learnmongo.com/posts/mongo-seattle-2011/" title="Mongo Seattle 2011">Mongo Seattle 2011</a></li>
+        </ul>
+        </li>
+
+
+        <li class="widget"><h2>Archives</h2>		<ul>
+            <li><a href="http://learnmongo.com/posts/2011/11/" title="November 2011">November 2011</a>&nbsp;(1)</li>
+            <li><a href="http://learnmongo.com/posts/2011/10/" title="October 2011">October 2011</a>&nbsp;(1)</li>
+        </ul>
+        </li>
+
+
+        <li class="widget">
+        <h2> <a class="tgt-twitter-follow" href="http://twitter.com/learnmongo" title="Follow learnmongo On Twitter" target="_blank" rel="nofollow"><img src="./Vincent's Notes_files/follow_me-a.png"></a> </h2> </li>
+
+        <li class="tgt_tweet"> <a href="http://twitter.com/LearnMongo" title="Follow LearnMongo On Twitter" target="_blank" rel="nofollow"><img class="alignleft" src="./Vincent's Notes_files/learnmongo_normal.png" alt="avatar"></a>
+        <div class="tgt_tweet_dat">
+            @shift8creative yea some slides and code will be ready in a day or two!<span class="tgt_twitter_meta">5 days ago via <a href="http://twitter.com/#!/download/iphone" rel="nofollow">Twitter for iPhone</a></span>
+        </div>
+        </li>
+
+        <li class="tgt_tweet">
+        <a href="http://twitter.com/LearnMongo" title="Follow LearnMongo On Twitter" target="_blank" rel="nofollow"><img class="alignleft" src="./Vincent's Notes_files/learnmongo_normal.png" alt="avatar"></a>
+        <div class="tgt_tweet_dat">
+            Thanks for coming to the session, sorry  the technical issues threw me off a bit. Exciting to hear about the roadmap at #mongoseattle now!<span class="tgt_twitter_meta">5 days ago via <a href="http://twitter.com/#!/download/iphone" rel="nofollow">Twitter for iPhone</a></span>
+        </div>
+        </li>
+    </ul>
+
+</div>
+    </div><!-- /c2 -->
+
+</div><!-- /innerwrap -->
+
+</div>
+
+<div class="navigation">
+    <div class="innerwrap">
+        <div class="Nav">
+            <strong class="on">1</strong> <a href="http://learnmongo.com/page/2/">2</a>  <a href="http://learnmongo.com/page/3/">3</a>  <a href="http://learnmongo.com/page/4/">4</a> <a href="http://learnmongo.com/page/2/">Next »</a> ... <a href="http://learnmongo.com/page/5/">Last »</a></div> 	</div>
+</div>
+
+<div id="footer">
+
+    <div class="innerwrap">
+
+        <div id="footer-info">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body></html>

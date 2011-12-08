@@ -5,7 +5,6 @@ import datetime
 import StringIO
 
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy import desc
@@ -23,8 +22,7 @@ log.setLevel(logging.DEBUG)
 @view_config(route_name='test')
 def test(request):
     import os
-    html = open(os.path.join(os.path.dirname(__file__), 'templates/test.html')).read()
-    return Response(html)
+    return open(os.path.join(os.path.dirname(__file__), 'templates/test.html')).read()
 
 @view_config(route_name='index', renderer='blog:templates/base_new.mako')
 def index(request):
