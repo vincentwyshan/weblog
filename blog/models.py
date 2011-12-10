@@ -46,6 +46,7 @@ class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(55))
+    posts = relationship('Post', backref='category')
 
 class Post(Base):
     __tablename__ = 'post'
@@ -57,7 +58,6 @@ class Post(Base):
     timestamp = Column(Integer, nullable=False)
     date = Column(DATE, nullable=False)
     category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship('Category')
     tags = relationship('Tag', secondary=lambda:rel_post_tag, backref='posts')
     click_counter = Column(Integer, default=0)
 

@@ -45,8 +45,9 @@ def sidebar_variables(func):
         tmp_archives = []
         for a,cnt in archives.items():
             tmp_archives.append((a, cnt))
-        response_dict.update({'categories':categories, 'archives':tmp_archives,
-            'recent_posts':session.query(Post).order_by(desc(Post.timestamp))})
+        response_dict.update({'categories':categories, 'archives':tmp_archives })
+        if not 'recent_posts' in response_dict:
+            response_dict['recent_posts'] = session.query(Post).order_by(desc(Post.timestamp))
         return response_dict
     return _warper
 
@@ -54,24 +55,30 @@ def sidebar_variables(func):
 @sidebar_variables
 def index(request):
     session = DBSession()
-    posts = session.query(Post).order_by(desc(Post.timestamp))
     category = request.params.get('category')
+    current_query = dict()
+    page = request.params.get('p')
+    posts = session.query(Post).order_by(desc(Post.timestamp))
+    if page:
+        current_query['p'] = page
     if category:
         posts = posts.filter(Category.name==category)
+        current_query['category'] = category
     tag = request.params.get('tag')
     if tag:
         posts = posts.filter(Tag.name==tag)
-    entries = []
-    for entry in posts:
-        f = StringIO.StringIO()
-        content = publish_parts(entry.content, writer_name='html')['html_body']
-        content = content.replace('literal-block', 'literal-block prettyprint')
-        #entry.shortcontent = BlogHTMLParser().blogfeed(content, f, 5)
-        entry.shortcontent = content
-        entries.append(entry)
-    return dict(entries=entries, tags=session.query(Tag))
+        current_query['tag'] = tag
+    #for entry in posts:
+    #    f = StringIO.StringIO()
+    #    content = publish_parts(entry.content, writer_name='html')['html_body']
+    #    content = content.replace('literal-block', 'literal-block prettyprint')
+    #    #entry.shortcontent = BlogHTMLParser().blogfeed(content, f, 5)
+    #    entry.shortcontent = content
+    #    entries.append(entry)
+    return dict(recent_posts=posts, current_query=current_query, p=(page or 1))
 
 @view_config(route_name='entry', renderer='blog:templates/entry.mako')
+@sidebar_variables
 def entry(request):
     id = request.matchdict['kword_or_id']
     session = DBSession()
@@ -81,7 +88,7 @@ def entry(request):
     session.flush()
     #f = StringIO.StringIO()
     #content = BlogHTMLParser().blogfeed(content, f, 2)
-    return dict(entry=entry, toplist=posts,categories=session.query(Category), tags=session.query(Tag))
+    return dict(entry=entry)
 
 @view_config(route_name='post', renderer='blog:templates/post.mako')
 def post(request):

@@ -137,7 +137,6 @@ This theme is released under GPL (http://www.opensource.org/licenses/gpl-3.0.htm
 /* navigation + search */
 	.navigation { overflow:hidden; background-color:#E8E4E1; }
 	.navigation .innerwrap { background:url('images/bg_navigation.gif') left top repeat-y; padding:20px 0px 20px 0px; }
-	.Nav { margin:5px 0px 0px 20px; }
 	.navigation span { display:none; }
 	.navigation a { padding:6px 10px 6px 10px; background-color:#DCD6CD; color:#333333; }
 	.navigation a:hover { background-color:#CCC4B7; }
@@ -193,4 +192,6 @@ This theme is released under GPL (http://www.opensource.org/licenses/gpl-3.0.htm
 	.wp-caption p.wp-caption-text { font-size: 11px; line-height: 17px; padding: 0 4px 5px; margin: 0; }
 	/* End captions */
     .post-text li * {margin:0;}
-    #gtalkwidget { margin-top : 15px;}
+    #gtalkwidget { margin-top : 15px; border-bottom: 1px dotted;}
+    #innerwarp-bottom { padding:0;}
+	.Nav { padding:20px 5px;border:solid 1px #E7E2DE;border-bottom:0;border-top:0;width:628px;;background:#F2F0EE; }

@@ -1,63 +1,50 @@
-<%inherit file="base.mako"/>
+<%inherit file="base_new.mako"/>
 
-<%block name="css">
-<style type="text/css">
-    #post-page {
-    }
-    #post-top {
-        border-bottom: 1px dotted;
-        padding : 10px 0 10px;
-    }
-    .document {
-        margin-top:10px;
-        font-family: Georgia, "Bitstream Charter", serif;
-        padding:0 20px 0 20px;
-    }
+<%block name="contentleft">
+                    <!-- post -->
+                    <div class="" id="post-${entry.id}">
 
-</style>
+                        <div class="post-title">
+                            <h1>
+                                <a href="/${entry.date.year}/${entry.date.month}/${entry.id}" rel="bookmark">${entry.title}</a>
+                            </h1>
+                            <%
+                            import datetime, urllib
+                            %>
+                            <span class="post-date">
+                                ${datetime.datetime.fromtimestamp(entry.timestamp).strftime("%b %d %Y %H:%M:%S")}
+                            </span>
+                            <span class="post-categories">
+                                in <a href="?category=${urllib.quote(entry.category.name)}" title="">${entry.category.name}</a>
+                            </span>
+                            <span class="post-categories">
+                                taged as 
+                                %for i in range(len(entry.tags)):
+                                <% tag=entry.tags[i] %>
+                                <a href="?tag=${urllib.quote(tag.name)}">${tag.name}</a>
+                                %if i != len(entry.tags)-1:
+                                ,
+                                %endif    
+                                %endfor
+                            </div>
+
+
+                            <div class="post-text">
+                                <%
+                                from docutils.core import publish_parts
+                                content = publish_parts(entry.content, writer_name='html')['html_body']
+                                %>
+                                ${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
+                            </div>
+
+                            <div class="post-pages" style="display:none"></div>
+                            <div class="post-foot">
+                                <a href="" class="comments-link" title="" style="display:none">0 Comments and 0 Reactions</a>				<div class="post-meta">
+                                    <div class="post-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+
+ 
 </%block>
-
-
-
-<div id="post-page" class="span10">
-<div id="post-top">
-<h3 id="post-title">
-    ${entry.title}
-</h3>
-<%
-    import datetime
-%>
-<%def name="createspan(name)">
-<span class="label success">${name}</span>
-</%def>
-<span class="label">${datetime.datetime.fromtimestamp(entry.timestamp).strftime("%b %d %Y %H:%M:%S")}</span>
-${''.join([createspan(t.name) for t in entry.tags])}
-</div>
-<%
-    from docutils.core import publish_parts
-    content = publish_parts(entry.content, writer_name='html')['html_body']
-%>
-${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
-</div>
-
-<div class="span4">
-<h5>Categories</h5>
-<div id="categories">
-<ul>
-%for cat in categories:
-<li>
-${cat.name}
-</li>
-%endfor 
-</ul>
-</div>
-
-<h5>Tags</h5>
-<p id="tags">
-%for tag in tags:
-<span class="label">${tag.name}</span>
-%endfor
-</p>
-</div>
-
-
