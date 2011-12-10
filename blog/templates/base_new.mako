@@ -116,7 +116,7 @@
                             <ul id="widgets">
 
                                 <li class="widget">
-                                <h2>Search LearnMongo</h2>
+                                <h2>Search</h2>
                                 <form method="get" id="searchform" action="">
                                     <input type="text" onfocus="if (this.value == &#39;Search&#39;) {this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;) {this.value = &#39;Search&#39;;}" value="Search" name="s">
                                 </form>
