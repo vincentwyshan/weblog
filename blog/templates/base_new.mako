@@ -161,7 +161,7 @@
                                 <h2>Recent Posts</h2>	
                                 <ul>
                                     %for post in recent_posts[:6]:
-                                    <li><a href="" title="${post.title}">${post.title}</a></li>
+                                    <li><a href="/${post.date.year}/${post.date.month}/${post.id}" title="${post.title}">${post.title}</a></li>
                                     %endfor
                                 </ul>
                                 </li>
