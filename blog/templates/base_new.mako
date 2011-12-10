@@ -135,7 +135,7 @@
                                 <div id="gtalkwidget">
                                     <!--<a href=""><img style="width:75%;" src="/static/image/mongoLA_badge_blank.png"></a>
                                     <br>-->
-                                    <iframe src="http://www.google.com/talk/service/badge/Show?tk=z01q6amlqb5ighq076lqoblqmum5r1tt1m4rdjh9rak3a33u8mdbopdh6kppfsssk347q8c48hu9eho2dk5g9dq7ocn8nk85ldh169rbseel0apl617759qacbcjpq9m52fifp7fe2on6c07ojopmc38kke2dnsfbfmth5agq7102v8tijfubjdei42gpq8k5c8&amp;w=200&amp;h=60" frameborder="0" allowtransparency="true" width="200" height="60"></iframe>
+                                    <iframe src="http://www.google.com/talk/service/badge/Show?tk=z01q6amlq5u5r7751132h9m7pamj8neni062rh47h4otv4qhj58f9d3jhbo3kiruiib05f52268drrtc2qt9h80em5mc1ccc7dcj1nhtp3btigi03r09u4sltfh0sptq9argl75nc2dgibc0sh7blkds2lrdqc34d0lls6os4son5e16r5e782159r0beegemjo&amp;w=200&amp;h=60" frameborder="0" allowtransparency="true" width="200" height="60"></iframe>
                                 </div>
                                 </li>
 
