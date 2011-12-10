@@ -1,5 +1,6 @@
 #coding=utf8
 
+import re
 import time
 import datetime
 import StringIO
@@ -26,12 +27,49 @@ def test(request):
     html = open(os.path.join(os.path.dirname(__file__), 'templates/test.html')).read()
     return Response(html)
 
+def sidebar_variables(func):
+    def _warper(*kargs, **kwarg):
+        response_dict = func(kargs[1]) #TODO here might be a pyramid bug
+        session = DBSession()
+        categories = []
+        for category in session.query(Category):
+            category.postcount = session.bind.execute("select count(0) from post where category_id=%s" % category.id).fetchone()[0]
+            categories.append(category)
+        archives = {}
+        for p in session.query(Post):
+            a_d = datetime.datetime.fromtimestamp(p.timestamp).strftime("%B %Y")
+            if a_d in archives:
+                archives[a_d] += 1
+            else:
+                archives[a_d] = 1
+        tmp_archives = []
+        for a,cnt in archives.items():
+            tmp_archives.append((a, cnt))
+        response_dict.update({'categories':categories, 'archives':tmp_archives,
+            'recent_posts':session.query(Post).order_by(desc(Post.timestamp))})
+        return response_dict
+    return _warper
+
 @view_config(route_name='index', renderer='blog:templates/base_new.mako')
+@sidebar_variables
 def index(request):
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))
-    categories = session.query(Category)
-    return dict(entries=posts, toplist=posts, categories=categories, tags=session.query(Tag))
+    category = request.params.get('category')
+    if category:
+        posts = posts.filter(Category.name==category)
+    tag = request.params.get('tag')
+    if tag:
+        posts = posts.filter(Tag.name==tag)
+    entries = []
+    for entry in posts:
+        f = StringIO.StringIO()
+        content = publish_parts(entry.content, writer_name='html')['html_body']
+        content = content.replace('literal-block', 'literal-block prettyprint')
+        #entry.shortcontent = BlogHTMLParser().blogfeed(content, f, 5)
+        entry.shortcontent = content
+        entries.append(entry)
+    return dict(entries=entries, tags=session.query(Tag))
 
 @view_config(route_name='entry', renderer='blog:templates/entry.mako')
 def entry(request):
@@ -90,28 +128,48 @@ def post(request):
 from HTMLParser import HTMLParser
 class BlogHTMLParser(HTMLParser):
 
-    def blogfeed(self, data, fileobj, paragraph_num=1):
-        self.paragraph_num = paragraph_num
+    def blogfeed(self, data, fileobj, paragraph_num=1, wordcount=200):
+        self.paragraph_num, self.wordcount = paragraph_num, wordcount
         self.counter = 0
         self.f = fileobj
-        return self.feed(data)
+        self.anchor_tag = False
+        self.feed(data)
+        document = self.f.getvalue()
+#        document = re.sub(r'\n*<a', ' <a', document)
+#        document = re.sub(r'a>\n*', 'a> ', document)
+        def repl(matchobj):
+            atag = matchobj.group()
+            return atag.replace('\n', ' ')
+        document = re.sub(r'\n*<a[\d\D]+(a>\n+)?', repl, document)
+        print repr(document)
+        short_document = '<div class="document"><p>%s</p></div>' % document.replace('\n', '<br>')
+        return short_document
 
     def handle_starttag(self, tag, attrs):
-        if self.counter == self.paragraph_num:
+        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
             return
         html = '<%s %s>'
         s_attrs = ''
         for k,v in attrs:
             s_attrs += ' %s="%s"'%(k,v)
-        print >>self.f, html % (tag, s_attrs)
+        if tag.strip() == 'a':
+            html = html % (tag, s_attrs)
+            print >>self.f, html.replace('\n', '').strip()
+            self.anchor_tag = True
 
     def handle_data(self, data):
-        if self.counter == self.paragraph_num:
+        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
             return
-        print >>self.f, data
+        if data.strip() == '':
+            return
+        if self.anchor_tag:
+            self.f.write(data.replace('\n', ' '))
+        else:
+            print >>self.f, data
 
     def handle_endtag(self, tag):
-        if self.counter == self.paragraph_num:
+        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
             return
-        print >>self.f, '</%s>'%tag
+        if tag.strip() == 'a':
+            print >>self.f, ('</%s>'%tag).replace('\n', '').strip()
         self.counter += 1

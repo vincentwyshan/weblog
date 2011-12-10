@@ -193,3 +193,4 @@ This theme is released under GPL (http://www.opensource.org/licenses/gpl-3.0.htm
 	.wp-caption p.wp-caption-text { font-size: 11px; line-height: 17px; padding: 0 4px 5px; margin: 0; }
 	/* End captions */
     .post-text li * {margin:0;}
+    #gtalkwidget { margin-top : 15px;}

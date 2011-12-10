@@ -9,12 +9,15 @@
         <link href="/static/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="/static/js/google-code-prettify/prettify.js" ></script>
 
+        <%block name="css">
+        </%block>
 
     </head>
 
 
     <body onload="prettyPrint()" >
 
+        <%block name="header">
         <div id="header">
             <div class="innerwrap">
                 <div id="menu">
@@ -34,6 +37,7 @@
                 <!--<h4>Resources for Learning and Mastering MongoDB</h4>-->
             </div>
         </div>
+        </%block>
 
 
 
@@ -53,12 +57,23 @@
                                 <a href="/${entry.date.year}/${entry.date.month}/${entry.id}" rel="bookmark">${entry.title}</a>
                             </h1>
                             <%
-                                import datetime
+                                import datetime, urllib
                             %>
                             <span class="post-date">
                                 ${datetime.datetime.fromtimestamp(entry.timestamp).strftime("%b %d %Y %H:%M:%S")}
                             </span>
-                            <span class="post-categories">in <a href="#" title="">${entry.category.name}</a>, <a href="" title="" ></a></span>
+                            <span class="post-categories">
+                                in <a href="?category=${urllib.quote(entry.category.name)}" title="">${entry.category.name}</a>
+                            </span>
+                            <span class="post-categories">
+                                taged as 
+                                %for i in range(len(entry.tags)):
+                                <% tag=entry.tags[i] %>
+                                <a href="?tag=${urllib.quote(tag.name)}">${tag.name}</a>
+                                %if i != len(entry.tags)-1:
+                                    ,
+                                %endif    
+                                %endfor
                         </div>
 
 
@@ -67,7 +82,8 @@
     from docutils.core import publish_parts
     content = publish_parts(entry.content, writer_name='html')['html_body']
 %>
-                            ${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
+                            ##${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
+                            ${entry.shortcontent | n,trim}
                         </div>
 
                         <div class="post-pages"></div>
@@ -114,18 +130,21 @@
 
                             <li class="widget">
                             <h2>Speaking</h2>	
-                            <div class="textwidget">
-                                <a href=""><img style="width:75%;" src="/static/image/mongoLA_badge_blank.png"></a>
-                                <br></div>
+                            <div id="gtalkwidget">
+                                <!--<a href=""><img style="width:75%;" src="/static/image/mongoLA_badge_blank.png"></a>
+                                <br>-->
+                                <iframe src="http://www.google.com/talk/service/badge/Show?tk=z01q6amlqb5ighq076lqoblqmum5r1tt1m4rdjh9rak3a33u8mdbopdh6kppfsssk347q8c48hu9eho2dk5g9dq7ocn8nk85ldh169rbseel0apl617759qacbcjpq9m52fifp7fe2on6c07ojopmc38kke2dnsfbfmth5agq7102v8tijfubjdei42gpq8k5c8&amp;w=200&amp;h=60" frameborder="0" allowtransparency="true" width="200" height="60"></iframe>
+                            </div>
                             </li>
 
 
                             <li class="widget"><h2>Categories</h2>	
                             <ul>
-                                <li class="cat-item cat-item-6"><a href="" title="View all posts filed under Administration">Administration</a> (6)
+                                %for category in categories:
+                                <li class="cat-item"><a href="" title="">${category.name}</a>
+                                (${category.postcount})
                                 </li>
-                                <li class="cat-item cat-item-3"><a href="" title="View all posts filed under Announcements">Announcements</a> (3)
-                                </li>
+                                %endfor
                             </ul>
                             </li>		
 
@@ -134,18 +153,22 @@
                             <li class="widget">	
                             <h2>Recent Posts</h2>	
                             <ul>
-                                <li><a href="" title="Mongo Seattle 2011">Mongo Seattle 2011</a></li>
+                                %for post in recent_posts:
+                                <li><a href="" title="${post.title}">${post.title}</a></li>
+                                %endfor
                             </ul>
                             </li>
 
 
                             <li class="widget"><h2>Archives</h2>		<ul>
-                                <li><a href="" title="November 2011">November 2011</a>&nbsp;(1)</li>
-                                <li><a href="" title="October 2011">October 2011</a>&nbsp;(1)</li>
+                            %for arch in archives:
+                            <li><a href="" title="${arch[0]}">${arch[0]}</a>&nbsp;(${arch[1]})</li>
+                            %endfor
                             </ul>
                             </li>
 
 
+                        <!-- tweet widget
                             <li class="widget">
                             <h2> <a class="tgt-twitter-follow" href="" title="Follow learnmongo On Twitter" target="_blank" rel="nofollow"><img src="./Vincent's Notes_files/follow_me-a.png"></a> </h2> </li>
 
@@ -161,6 +184,8 @@
                                 Thanks for coming to the session, sorry  the technical issues threw me off a bit. Exciting to hear about the roadmap at #mongoseattle now!<span class="tgt_twitter_meta">5 days ago via <a href="" rel="nofollow">Twitter for iPhone</a></span>
                             </div>
                             </li>
+
+                            -->
                         </ul>
 
                     </div>
