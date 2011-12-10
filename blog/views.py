@@ -48,6 +48,8 @@ def sidebar_variables(func):
         response_dict.update({'categories':categories, 'archives':tmp_archives })
         if not 'recent_posts' in response_dict:
             response_dict['recent_posts'] = session.query(Post).order_by(desc(Post.timestamp))
+        if not 'current_query' in response_dict:
+            response_dict['current_query'] = {}
         return response_dict
     return _warper
 
