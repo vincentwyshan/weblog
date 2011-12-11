@@ -4,8 +4,9 @@ import re
 import time
 import datetime
 import StringIO
+from hashlib import md5
 
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPUnauthorized
 from pyramid.response import Response
 from pyramid.view import view_config
 
@@ -21,11 +22,40 @@ logging.basicConfig()
 log = logging.getLogger(__file__)
 log.setLevel(logging.DEBUG)
 
+_USER = {'vincent' : 'v1984913'}
+
 @view_config(route_name='test')
 def test(request):
     import os
     html = open(os.path.join(os.path.dirname(__file__), 'templates/test.html')).read()
-    return Response(html)
+    response = Response(html)
+    return response
+
+def _auth(func):
+    def _warper(*kargs, **kwarg):
+        request = kargs[1] #TODO here might be a pyramid bug
+        auth_str = request.headers.get('Authorization')
+        if 'Authorization' not in request.headers or not digest_http_auth_valid(auth_str, request.method):
+            html = '''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                 "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+                <HTML>
+                  <HEAD>
+                    <TITLE>Error</TITLE>
+                    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+                  </HEAD>
+                  <BODY><H1>401 Unauthorized.</H1></BODY>
+                </HTML>'''
+            response = Response(html)
+            response.status_int = 401
+            #response.headerlist.append(('WWW-Authenticate', 'Basic realm="Secure Area"'))
+            tokens = digest_http_auth_tokens()
+            tokens['nonce'] = md5(request.remote_addr).hexdigest()
+            auth_str = 'Digest '+','.join(['%s="%s"' % (k,v) for k,v in tokens.items()])
+            response.headerlist.append(('WWW-Authenticate', auth_str))
+        else:
+            response = func(request)
+        return response
+    return _warper
 
 def sidebar_variables(func):
     def _warper(*kargs, **kwarg):
@@ -93,6 +123,7 @@ def entry(request):
     return dict(entry=entry)
 
 @view_config(route_name='post', renderer='blog:templates/post.mako')
+@_auth
 def post(request):
     id = request.params.get('id')
     session = DBSession()
@@ -133,6 +164,15 @@ def post(request):
         if id:
             entry = session.query(Post).get(id)
         return dict(entries=session.query(Post), entry=entry, toplist=session.query(Post))
+
+@view_config(route_name='delete_post')
+def delete_post(request):
+    id = request.params.get('id')
+    session = DBSession()
+    p = session.query(Post).get(id)
+    session.delete(p)
+    session.flush()
+    return Response('1')
 
 from HTMLParser import HTMLParser
 class BlogHTMLParser(HTMLParser):
@@ -182,3 +222,36 @@ class BlogHTMLParser(HTMLParser):
         if tag.strip() == 'a':
             print >>self.f, ('</%s>'%tag).replace('\n', '').strip()
         self.counter += 1
+
+def digest_http_auth_tokens():
+    realm = 'loglogvincent Auth'
+    qop = 'auth'
+    nonce = None
+    opaque = '1053267b-17a6-414e-9a75-c61b66f445bb'
+    return locals()
+
+def digest_http_auth_parse(auth_str):
+    auth_str = auth_str.replace('Digest', '')
+    token_list = auth_str.split(',')
+    result = {}
+    for t in token_list:
+        m = re.search('\s*(?P<name>[^=]+)=(?P<val>.+)', t)
+        val = m.group('val').strip()
+        if val[0] == val[-1] and val[0] in('"', "'"):
+            val = val[1:-1]
+        result[m.group('name')] = val
+    return result
+
+def digest_http_auth_valid(auth_str, method):
+    """response=MD5(HA1:nonce:nonceCount:clientNonce:qop:HA2)
+    HA1=MD5(username:realm:password)
+    HA2=MD5(method:digestURI)
+    refreence: http://en.wikipedia.org/wiki/Digest_access_authentication
+    """
+    data = digest_http_auth_parse(auth_str)
+    data.update({'password':_USER[data['username']]})
+    HA1 = md5('%(username)s:%(realm)s:%(password)s'%data)
+    HA2 = md5('%s:%s' % (method, data['uri']))
+    data.update(dict(HA1=HA1.hexdigest(),HA2=HA2.hexdigest()))
+    response = md5('%(HA1)s:%(nonce)s:%(nc)s:%(cnonce)s:%(qop)s:%(HA2)s' % data).hexdigest()
+    return response == data['response']
