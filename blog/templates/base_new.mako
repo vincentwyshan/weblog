@@ -117,9 +117,25 @@
 
                                 <li class="widget">
                                 <h2>Search</h2>
-                                <form method="get" id="searchform" action="">
+                                <!--<form method="get" id="searchform" action="">
                                     <input type="text" onfocus="if (this.value == &#39;Search&#39;) {this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;) {this.value = &#39;Search&#39;;}" value="Search" name="s">
-                                </form>
+                                </form> -->
+                                <!-- GOOGLE CSE -->
+                                <div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1', {language : 'en', style : google.loader.themes.SHINY});
+  google.setOnLoadCallback(function() {
+    var customSearchControl = new google.search.CustomSearchControl(
+      '013068152288002893796:ets6c-unptc');
+
+    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+
+
+
                                 </li>
 
 
