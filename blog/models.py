@@ -66,14 +66,18 @@ def populate():
     session = DBSession()
     #model = MyModel(name=u'root', value=55)
     import time
-    q = session.query(Post).filter_by(title='Hello world')
+    q = session.query(Post).filter_by(title='Hello world!')
     if q.count() == 0:
         session.bind.execute('delete from post')
-        tag = Tag(name='Test')
+        tag = Tag(name='start from here')
         session.add(tag)
-        category = Category(name='Foo bar')
+        category = Category(name='misc')
         session.add(category)
-        post = Post(title='Hello world', content='welcome\n----------\n- hello world!\n- reStructText cool!',
+        post = Post(title='Hello world', content='''
+**welcome**
+
+- writen posts by reStructText 
+- python and pyramid are used for building this blog''',
                 timestamp=time.time(), date=datetime.datetime.today())
         post.tags.append(tag)
         post.category = category
