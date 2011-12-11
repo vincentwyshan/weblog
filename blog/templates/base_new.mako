@@ -21,7 +21,7 @@
                 <div id="menu">
                     <ul>
                         <li><a href="" title="">About</a></li>
-                        <li><a href="" title="">GitHub</a></li>
+                        <li><a href="https://github.com/vincentwv/" title="">GitHub</a></li>
                         <li><a href="" class="subscribe">Subscribe</a></li>
                     </ul>
                 </div>
