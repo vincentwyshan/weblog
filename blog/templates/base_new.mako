@@ -52,7 +52,7 @@
 %>
 
 
-                    %for entry in recent_posts:
+                    %for entry in posts:
                     <!-- post -->
                     <div class="" id="post-${entry.id}">
 
@@ -166,11 +166,9 @@
                                 <ul>
                                     %for category in categories:
                                     <%
-                                        import urllib, copy
-                                        q_c = copy.copy(current_query)
-                                        q_c['category'] = category.name
+                                        import urllib
                                     %>
-                                    <li class="cat-item"><a href="?${urllib.urlencode(q_c)}" title="${category.name}">${category.name}</a>
+                                    <li class="cat-item"><a href="?${urllib.quote(category.name)}" title="${category.name}">${category.name}</a>
                                     (${category.postcount})
                                     </li>
                                     %endfor
@@ -227,7 +225,7 @@
             <div class="navigation">
                 <div class="innerwrap" id="innerwarp-bottom">
                     <div class="Nav">
-                        <% count = recent_posts.count() %>
+                        <% count = posts.count() %>
                         %for i in range(0, count/10 + 1):
                         %if i+1 == p:
                         <strong class="on">${i+1}</strong>

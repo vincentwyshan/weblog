@@ -1,3 +1,5 @@
+#coding=utf8
+
 import datetime
 
 import transaction
@@ -66,14 +68,17 @@ def populate():
     session = DBSession()
     #model = MyModel(name=u'root', value=55)
     import time
-    q = session.query(Post).filter_by(title='Hello world!')
+    q = session.query(Post)
     if q.count() == 0:
         session.bind.execute('delete from post')
+        session.bind.execute('delete from category')
+        session.bind.execute('delete from tag')
+        session.bind.execute('delete from rel_post_tag')
         tag = Tag(name='start from here')
         session.add(tag)
         category = Category(name='misc')
         session.add(category)
-        post = Post(title='Hello world', content='''
+        post = Post(title='Hello world!', content='''
 **welcome**
 
 - writen posts by reStructText 

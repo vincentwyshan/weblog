@@ -94,11 +94,11 @@ def index(request):
     if page:
         current_query['p'] = page
     if category:
-        posts = posts.filter(Category.name==category)
+        posts = posts.join(Post.category).filter(Category.name==category)
         current_query['category'] = category
     tag = request.params.get('tag')
     if tag:
-        posts = posts.filter(Tag.name==tag)
+        posts = posts.join(Post.tags).filter(Tag.name==tag)
         current_query['tag'] = tag
     #for entry in posts:
     #    f = StringIO.StringIO()
@@ -107,7 +107,7 @@ def index(request):
     #    #entry.shortcontent = BlogHTMLParser().blogfeed(content, f, 5)
     #    entry.shortcontent = content
     #    entries.append(entry)
-    return dict(recent_posts=posts, current_query=current_query, p=(page or 1))
+    return dict(posts=posts, current_query=current_query, p=(page or 1))
 
 @view_config(route_name='entry', renderer='blog:templates/entry.mako')
 @sidebar_variables
