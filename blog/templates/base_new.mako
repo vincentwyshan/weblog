@@ -168,7 +168,7 @@
                                     <%
                                         import urllib
                                     %>
-                                    <li class="cat-item"><a href="/?${urllib.quote(category.name)}" title="${category.name}">${category.name}</a>
+                                    <li class="cat-item"><a href="/?category=${urllib.quote(category.name)}" title="${category.name}">${category.name}</a>
                                     (${category.postcount})
                                     </li>
                                     %endfor
