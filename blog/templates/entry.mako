@@ -15,13 +15,13 @@
                                 ${datetime.datetime.fromtimestamp(entry.timestamp).strftime("%b %d %Y %H:%M:%S")}
                             </span>
                             <span class="post-categories">
-                                in <a href="?category=${urllib.quote(entry.category.name)}" title="">${entry.category.name}</a>
+                                in <a href="/?category=${urllib.quote(entry.category.name)}" title="">${entry.category.name}</a>
                             </span>
                             <span class="post-categories">
                                 taged as 
                                 %for i in range(len(entry.tags)):
                                 <% tag=entry.tags[i] %>
-                                <a href="?tag=${urllib.quote(tag.name)}">${tag.name}</a>
+                                <a href="/?tag=${urllib.quote(tag.name)}">${tag.name}</a>
                                 %if i != len(entry.tags)-1:
                                 ,
                                 %endif    
