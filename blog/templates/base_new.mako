@@ -222,6 +222,7 @@
 
             </div>
 
+            <%block name="pagination">
             <div class="navigation">
                 <div class="innerwrap" id="innerwarp-bottom">
                     <div class="Nav">
@@ -241,6 +242,7 @@
                 </div>
             </div>
             </div>
+            </%block>
 
             <div id="footer">
 
