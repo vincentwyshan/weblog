@@ -141,7 +141,13 @@
 
 
 
-                                <li class="widget"><h2>Follow Me on Twitter</h2>			<div class="textwidget"><p><a href="https://twitter.com/vincentwv" class="twitter-follow-button" data-show-count="false">Follow @vincentwv</a><br>
+                                <li class="widget"><h2>Follow Me on SNS</h2>		
+                                <div class="textwidget">
+                                    <p>
+                                    <a href="https://twitter.com/vincentwv" class="twitter-follow-button" data-show-count="false">twitter @vincentwv</a><br>
+                                    <a href="http://t.qq.com/Test_Vincent" class="twitter-follow-button" data-show-count="false">qq @vincent</a><br>
+                                    <a href="http://weibo.com/vincentwv" class="twitter-follow-button" data-show-count="false">sina @vincent_wv</a><br>
+                                    <a href="http://www.douban.com/people/Riefu/" class="twitter-follow-button" data-show-count="false">douban @vincentwv</a><br>
                                     </p>
                                 </div>
                                 </li>
