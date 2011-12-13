@@ -12,6 +12,8 @@ from pyramid.view import view_config
 
 from sqlalchemy import desc
 
+import PyRSS2Gen
+
 from blog.models import DBSession
 from blog.models import Post, Tag, Category
 
@@ -24,7 +26,7 @@ log.setLevel(logging.DEBUG)
 
 _USER = {'vincent' : 'v1984913'}
 
-@view_config(route_name='test')
+#@view_config(route_name='test')
 def test(request):
     import os
     html = open(os.path.join(os.path.dirname(__file__), 'templates/test.html')).read()
@@ -80,6 +82,7 @@ def sidebar_variables(func):
             response_dict['recent_posts'] = session.query(Post).order_by(desc(Post.timestamp))
         if not 'current_query' in response_dict:
             response_dict['current_query'] = {}
+        response_dict['header_repl'] = header_repl
         return response_dict
     return _warper
 
@@ -165,20 +168,63 @@ def post(request):
             entry = session.query(Post).get(id)
         return dict(entries=session.query(Post), entry=entry, toplist=session.query(Post))
 
-@view_config(route_name='delete_post')
-def delete_post(request):
-    id = request.params.get('id')
+@view_config(route_name='delete')
+@_auth
+def delete(request):
+    pid = request.params.get('post')
+    category = request.params.get('category')
+    tag = request.params.get('tag')
     session = DBSession()
-    p = session.query(Post).get(id)
-    session.delete(p)
+    if pid:
+        p = session.query(Post).get(pid)
+        session.delete(p)
+    if category:
+        category = session.query(Category).filter_by(name=category).first()
+        for p in category.posts:
+            p.category = None
+        session.delete(category)
+    if tag:
+        tag = session.query(Tag).filter_by(name=tag).first()
+        tid = tag.id
+        session.delete(tag)
+        session.bind.execute("delete from rel_post_tag where tag_id=%s" % tid)
     session.flush()
     return Response('1')
+
+def _rss_item(host, post):
+    pubdate = datetime.datetime.fromtimestamp(post.timestamp)
+    html = publish_parts(post.content, writer_name='html')['html_body']
+    des = BlogHTMLParser().blogfeed(html, StringIO.StringIO(), 5)
+    return PyRSS2Gen.RSSItem(
+            title = post.title,
+            link = "http://%s/%s/%s/%s" % (host, pubdate.year, pubdate.month, post.id),
+            description = des,
+            guid = PyRSS2Gen.Guid("http://%s/%s"%(host,str(post.timestamp))),
+            pubDate = pubdate,
+            )
+
+@view_config(route_name='rss')
+def rss(request):
+    host = request.host
+    session = DBSession()
+    posts = session.query(Post).order_by(desc(Post.timestamp))[:20]
+    rss = PyRSS2Gen.RSS2(
+            title = "Vincent's Blog feed",
+            link = host,
+            description = "about my thought, work, programing",
+            lastBuildDate = datetime.datetime.utcnow(), 
+            items = [_rss_item(host,p) for p in posts]
+            )
+    f = StringIO.StringIO()
+    rss.write_xml(f)
+    return Response(f.getvalue())
+                
 
 from HTMLParser import HTMLParser
 class BlogHTMLParser(HTMLParser):
 
-    def blogfeed(self, data, fileobj, paragraph_num=1, wordcount=200):
-        self.paragraph_num, self.wordcount = paragraph_num, wordcount
+    def blogfeed(self, data, fileobj, paragraph_num=1):
+        self.paragraph_num  = paragraph_num
         self.counter = 0
         self.f = fileobj
         self.anchor_tag = False
@@ -186,16 +232,17 @@ class BlogHTMLParser(HTMLParser):
         document = self.f.getvalue()
 #        document = re.sub(r'\n*<a', ' <a', document)
 #        document = re.sub(r'a>\n*', 'a> ', document)
-        def repl(matchobj):
-            atag = matchobj.group()
-            return atag.replace('\n', ' ')
-        document = re.sub(r'\n*<a[\d\D]+(a>\n+)?', repl, document)
-        print repr(document)
-        short_document = '<div class="document"><p>%s</p></div>' % document.replace('\n', '<br>')
-        return short_document
+        #def repl(matchobj):
+        #    atag = matchobj.group()
+        #    return atag.replace('\n', ' ')
+        #document = re.sub(r'\n*<a[\d\D]+(a>\n+)?', repl, document)
+        #print repr(document)
+        #short_document = '<div class="document"><p>%s</p></div>' % document.replace('\n', '<br>')
+        #return short_document
+        return document
 
     def handle_starttag(self, tag, attrs):
-        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
+        if self.counter == self.paragraph_num:
             return
         html = '<%s %s>'
         s_attrs = ''
@@ -207,7 +254,7 @@ class BlogHTMLParser(HTMLParser):
             self.anchor_tag = True
 
     def handle_data(self, data):
-        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
+        if self.counter == self.paragraph_num:
             return
         if data.strip() == '':
             return
@@ -217,7 +264,7 @@ class BlogHTMLParser(HTMLParser):
             print >>self.f, data
 
     def handle_endtag(self, tag):
-        if self.counter == self.paragraph_num and len(self.f.getvalue()) > self.wordcount:
+        if self.counter == self.paragraph_num:
             return
         if tag.strip() == 'a':
             print >>self.f, ('</%s>'%tag).replace('\n', '').strip()
@@ -255,3 +302,10 @@ def digest_http_auth_valid(auth_str, method):
     data.update(dict(HA1=HA1.hexdigest(),HA2=HA2.hexdigest()))
     response = md5('%(HA1)s:%(nonce)s:%(nc)s:%(cnonce)s:%(qop)s:%(HA2)s' % data).hexdigest()
     return response == data['response']
+
+def header_repl(content):
+    for i in range(1, 4):
+        s,t = 'h%s' % i, 'h%s' % (i+1)
+        content = content.replace('<'+s, '<'+t)
+        content = content.replace(s+'>', t+'>')
+    return content.replace('literal-block', 'literal-block prettyprint linenums')

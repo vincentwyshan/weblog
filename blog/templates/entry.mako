@@ -34,7 +34,7 @@
                                 from docutils.core import publish_parts
                                 content = publish_parts(entry.content, writer_name='html')['html_body']
                                 %>
-                                ${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
+                                ${header_repl(content) | n,trim}
                             </div>
 
                             <div class="post-pages" style="display:none"></div>

@@ -194,4 +194,5 @@ This theme is released under GPL (http://www.opensource.org/licenses/gpl-3.0.htm
     .post-text li * {margin:0;}
     #gtalkwidget { margin-top : 15px; border-bottom: 1px dotted;}
     #innerwarp-bottom { padding:0;}
-	.Nav { padding:20px 5px;border:solid 1px #E7E2DE;border-bottom:0;border-top:0;width:628px;;background:#F2F0EE; }
+	.Nav { padding:20px 5px;border:solid 1px #E7E2DE;border-bottom:0;border-top:0;width:618px;;background:#F2F0EE; }
+    .linenums {padding:0;}

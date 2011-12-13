@@ -19,8 +19,8 @@ def main(global_config, **settings):
     config.add_route('index', '/')
     config.add_route('entry', '/{year}/{month}/{kword_or_id}')
     config.add_route('post', '/post')
-    config.add_route('delete_post', '/delete_post')
-    config.add_route('test', '/test')
+    config.add_route('delete', '/delete')
+    config.add_route('rss', '/rss')
     config.scan()
     return config.make_wsgi_app()
 

@@ -6,8 +6,11 @@
 
         <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="all">
         <link rel="stylesheet" href="/static/css/tweet_stream.css" type="text/css" media="all">
+        <link rel="stylesheet" href="/static/css/table.css" type="text/css" media="all">
         <link href="/static/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="/static/js/google-code-prettify/prettify.js" ></script>
+
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss" />
 
         <%block name="css">
         </%block>
@@ -20,9 +23,8 @@
             <div class="innerwrap">
                 <div id="menu">
                     <ul>
-                        <li><a href="" title="">About</a></li>
                         <li><a href="https://github.com/vincentwv/" title="">GitHub</a></li>
-                        <li><a href="" class="subscribe">Subscribe</a></li>
+                        <li><a href="/rss" class="subscribe">Subscribe</a></li>
                     </ul>
                 </div>
 
@@ -83,8 +85,9 @@
                                 <%
                                     from docutils.core import publish_parts
                                     content = publish_parts(entry.content, writer_name='html')['html_body']
+                                    content = header_repl(content)
                                 %>
-                                ${content.replace('literal-block', 'literal-block prettyprint') | n,trim}
+                                ${header_repl(content) | n,trim}
                             </div>
 
                             <div class="post-pages" style="display:none"></div>
