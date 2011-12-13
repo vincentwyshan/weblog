@@ -195,7 +195,7 @@ def _rss_item(host, post):
     pubdate = datetime.datetime.fromtimestamp(post.timestamp)
     html = publish_parts(post.content, writer_name='html')['html_body']
     #des = BlogHTMLParser().blogfeed(html, StringIO.StringIO(), 5)
-    link = "http://%s/%s/%s/%s" % (host, pubdate.year, pubdate.month, post.id),
+    link = "http://%s/%s/%s/%s" % (host, pubdate.year, pubdate.month, post.id)
     return PyRSS2Gen.RSSItem(
             title = post.title,
             link = link,
