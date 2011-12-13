@@ -216,8 +216,10 @@ def rss(request):
             items = [_rss_item(host,p) for p in posts]
             )
     f = StringIO.StringIO()
-    rss.write_xml(f)
-    return Response(f.getvalue())
+    rss.write_xml(f, encoding='utf8')
+    response = Response(f.getvalue())
+    response.content_type = "application/rss+xml"
+    return response
                 
 
 from HTMLParser import HTMLParser
