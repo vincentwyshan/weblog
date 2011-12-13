@@ -194,12 +194,13 @@ def delete(request):
 def _rss_item(host, post):
     pubdate = datetime.datetime.fromtimestamp(post.timestamp)
     html = publish_parts(post.content, writer_name='html')['html_body']
-    des = BlogHTMLParser().blogfeed(html, StringIO.StringIO(), 5)
+    #des = BlogHTMLParser().blogfeed(html, StringIO.StringIO(), 5)
+    link = "http://%s/%s/%s/%s" % (host, pubdate.year, pubdate.month, post.id),
     return PyRSS2Gen.RSSItem(
             title = post.title,
-            link = "http://%s/%s/%s/%s" % (host, pubdate.year, pubdate.month, post.id),
-            description = des,
-            guid = PyRSS2Gen.Guid("http://%s/%s"%(host,str(post.timestamp))),
+            link = link,
+            description = html,
+            guid = link,#PyRSS2Gen.Guid("http://%s/%s"%(host,str(post.timestamp))),
             pubDate = pubdate,
             )
 
