@@ -1,0 +1,5 @@
+      [paste.app_factory]
+      main = weblog:main
+      [console_scripts]
+      initialize_weblog_db = weblog.scripts.initializedb:main
+      
