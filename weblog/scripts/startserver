@@ -10,9 +10,9 @@ then
 	start|stop|restart|status)
 	    #WBPATH=$(python -c 'import os, weblog; print os.path.abspath(os.path.dirname(weblog.__file__))')
 	    #echo "pserve --daemon --pid-file=paster_5000.pid $1 $2 http_port=5000"
-	    pserve --daemon --pid-file=paster_5000.pid $1 $2 http_port=5000
-	    #echo "pserve --daemon --pid-file=paster_5001.pid $1 $2 http_port=5001"
-	    pserve --daemon --pid-file=paster_5001.pid $1 $2 http_port=5001
+	    pserve --daemon --pid-file=~/nginx/paster_5000.pid $1 $2 http_port=5000
+	    pserve --daemon --pid-file=~/nginx/paster_5001.pid $1 $2 http_port=5001
+	    pserve --daemon --pid-file=~/nginx/paster_5002.pid $1 $2 http_port=5002
 	    ;;
 	*)
 	    help
