@@ -1,4 +1,14 @@
 #coding=utf8
+'''
+add entry.title to first line of document, like:
+
+    ===========
+    entry.title
+    ===========
+    document.body...
+
+
+'''
 
 import re
 import time
@@ -86,6 +96,7 @@ def sidebar_variables(func):
         return response_dict
     return _warper
 
+
 @view_config(route_name='index', renderer='blog:templates/base_new.mako')
 @sidebar_variables
 def index(request):
@@ -110,6 +121,9 @@ def index(request):
     #    #entry.shortcontent = BlogHTMLParser().blogfeed(content, f, 5)
     #    entry.shortcontent = content
     #    entries.append(entry)
+    for entry in posts:
+        header = '='*len(entry.title)*2 + '\n' + entry.title + '\n' + '='*len(entry.title)*2 + '\n'
+        entry.content = header += entry.content
     return dict(posts=posts, current_query=current_query, p=(page or 1))
 
 @view_config(route_name='entry', renderer='blog:templates/entry.mako')
