@@ -3,6 +3,9 @@ Vincent's weblog
 
 Dependencies
 -------------
+- pyramid
+- sqlalchemy
+- *mako* template engine
 
 
 Install
@@ -12,7 +15,7 @@ Install
 
 Configuration
 -------------
-Nginx
+Nginx proxy 
 ::
     upstream myapp-site {
     server 127.0.0.1:5000;
