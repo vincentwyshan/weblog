@@ -120,7 +120,7 @@
 <%block name="footer">
 
 <p>© Copyright 2012 by Vincent w. 
-Contact me via <a href="mailto:phostu@gmail.com">mail</a>, <a href="http://weibo.com/2119986460">weibo</a>, <a href="https://github.com/vincentwv">github</a>. </p>
+Contact me via <a href="mailto:vincent.syshan@gmail.com">mail</a>, <a href="http://weibo.com/2119986460">weibo</a>, <a href="https://github.com/vincentwv">github</a>. </p>
  </%block>
 
 

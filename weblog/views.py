@@ -65,7 +65,7 @@ def recent_posts():
 @view_config(route_name='blog_home', renderer='weblog:templates/blog_home.mako')
 def blog_index(request):
     page = int(request.matchdict.get('page_num', 0))
-    posts_1page = 5
+    posts_1page = 9
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))
     _posts = []
