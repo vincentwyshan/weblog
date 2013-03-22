@@ -2,6 +2,13 @@
 
 <%block name="_body">
 
+<div>
+<article>
+
 ${description | n}
+
+
+</article>
+</div>
 
 </%block>

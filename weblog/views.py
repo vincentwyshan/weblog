@@ -11,7 +11,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPUnauthorized
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 
 from docutils.core import publish_parts
 import PyRSS2Gen
@@ -50,6 +50,18 @@ def _auth(func):
     return _warper
 
 
+def recent_posts():
+    "return recent 5 posts."
+    session = DBSession()
+    posts = session.query(Post).order_by(desc(Post.timestamp))
+    posts = posts.slice(0, 5)
+    result = []
+    for p in posts:
+        p.url = p.url_kword or unicode(p.id)
+        p.content_title = p.title or _title_from_content(p.content)
+        result.append(p)
+    return result
+
 @view_config(route_name='blog_home', renderer='weblog:templates/blog_home.mako')
 def blog_index(request):
     page = int(request.matchdict.get('page_num', 0))
@@ -62,7 +74,7 @@ def blog_index(request):
         #post.summary = _summary_from_content(post.content)
         post.url = post.url_kword or unicode(post.id)
         _posts.append(post)
-    return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/5}
+    return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/5, 'recent_posts':recent_posts()}
 
 
 @view_config(route_name='blog_post', renderer='weblog:templates/blog_post.mako')
@@ -78,19 +90,24 @@ def blog_post(request):
     parts = publish_parts(post.content, writer_name='html')
 
     html_body = parts['html_body']
-    position = html_body.find(parts['html_title'])
-    position += (len(parts['html_title']))
-    html_insert = u'''<div class="post-date">posted on %s</div>''' % post.date.strftime('%b %d, %Y')
-    tags = u', '.join([u'<a href="">%s</a>'%tag.name for tag in post.tags])
-    if tags:
-        tags = u'<div id="post-tags">taged %s</div>' % tags
-        html_insert += tags
-    html_body = html_body[:position] + html_insert + html_body[position:]
-    if position == 0:
-        html_body = (u'<h1 class="title">%s</h1>' % post.title) + html_body
+    
+    prev_post = session.query(Post).filter(Post.id<post.id).order_by(desc(Post.id))
+    if prev_post.count() > 0:
+        prev_post = prev_post[0]
+        prev_post.content_title = prev_post.title or _title_from_content(prev_post.content)
+    else:
+        prev_post = None
+
+    next_post = session.query(Post).filter(Post.id>post.id).order_by(asc(Post.id))
+    if next_post.count() > 0:
+        next_post = next_post[0]
+        next_post.content_title = next_post.title or _title_from_content(next_post.content)
+    else:
+        next_post = None
 
     post.html_content = html_body
-    return {'post':post}
+    return {'post':post, 'recent_posts':recent_posts(),
+            'prev_post': prev_post, 'next_post':next_post}
 
 
 @view_config(route_name='blog_rss')
@@ -114,10 +131,15 @@ def rss(request):
 @view_config(route_name='blog_about', renderer="weblog:templates/blog_about.mako")
 def about(request):
     description='''
-    <p> Hello I'm haha</p>
+    <p>I'm work at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a> as software engineer.</p>
+    <p>I keep writing code with <a href="http://www.python.org" target="_blank">Python</a>.</p>
+    <p>Like all about: "open source", "linux", "traveling", "reading". </p>
+    <p> Now I'm focus on "data-mining", "machine learning", "finance". </p> 
+
+
 
     '''
-    return {'description':description}
+    return {'description':description, 'recent_posts':recent_posts()}
 
 
 @view_config(route_name='blog_insert_update', renderer='weblog:templates/blog_update.mako')
@@ -159,7 +181,7 @@ def post(request):
             entry = session.query(Post).get(id)
         start = entry.id-2 if entry else 0
         entries=session.query(Post).filter(Post.id>=start).limit(5)
-        return dict(entry=entry, entries=entries)
+        return dict(entry=entry, entries=entries, recent_posts=recent_posts())
 
 @view_config(route_name='blog_delete')
 @_auth

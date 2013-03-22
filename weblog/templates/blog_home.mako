@@ -7,39 +7,53 @@
 
 <%block name="_body">
 
+<div class="blog-index">
 
 %for post in posts:
 
-<div class="entry-overview">
-    <div class="date">${post.date.strftime('%b %d, %Y')}</div>
-    <div class="detail">
-	<h1><a href="/post/${post.url}">${post.content_title}</a></h1>
-	<div class="summary">${post.summary}</div>
+<article>
+
+    <header>
+    <h1 class="entry-title"><a href="/post/${post.url}">${post.content_title}</a></h1>
+    <p class="meta">
+        <time>${post.date.strftime('%b %d, %Y')}</time>
+        |
+        <a href="#">0 Comments</a>
+    </p>
+    </header>
+
+    <div class="entry-content">
+    ${post.summary}
     </div>
-    <div class="tags">
-	%for tag in post.tags:
-	<span class="post-tag"><a href="">${tag.name}</a></span>
-	%endfor 
-    </div>
-</div>
+
+    <footer>
+    <a rel="full-article" href="/post/${post.url}">Read on →</a>
+    </footer>
+
+</article>
+
 
 %endfor
 
 
+
+
 <div class="pagination">
-    %if page_num > 0:
-	<span><a class="prev" href="/page/${page_num-1}" >Previous</a></span>
-    %else:
-	<span class="disabled"><a class="prev">Previous</a></span>
-    %endif
-    -
-    <strong>${page_num+1}</strong>
-    -
-    %if max_page_num > page_num:
-	<span><a class="next" href="/page/${page_num+1}" >Next</a></span>
-    %else:
-	<span class="disabled"><a class="next">Next</a></span>
-    %endif
-</div>
     
+    %if page_num > 0:
+      <a class="prev" href="/page/${page_num-1}">← Older</a>
+    %endif
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    %if max_page_num > page_num:
+    <a class="next" href="/">Newer →</a>
+    %endif
+  </div>
+    
+
+
+</div>
+
 </%block>
+
