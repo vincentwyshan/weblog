@@ -1,6 +1,7 @@
 #coding=utf8
 
 import re
+import time
 import StringIO
 import datetime
 from hashlib import md5
