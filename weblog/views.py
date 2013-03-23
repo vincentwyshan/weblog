@@ -72,7 +72,7 @@ def blog_index(request):
     _posts = []
     for post in posts[page*posts_1page:(page+1)*posts_1page]:
         post.content_title = post.title or _title_from_content(post.content)
-        #post.summary = _summary_from_content(post.content)
+        post.summary_html = publish_parts(post.summary, writer_name='html')['html_body']
         post.url = post.url_kword or unicode(post.id)
         _posts.append(post)
     return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/5, 'recent_posts':recent_posts()}

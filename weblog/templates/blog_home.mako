@@ -23,7 +23,7 @@
     </header>
 
     <div class="entry-content">
-    ${post.summary}
+    ${post.summary_html|n}
     </div>
 
     <footer>
