@@ -18,7 +18,7 @@
     <p class="meta">
         <time>${post.date.strftime('%b %d, %Y')}</time>
         |
-        <a href="#">0 Comments</a>
+        <a href="http://www.loglogvincent.com/post/${post.url}#disqus_thread">0 Comments</a>
     </p>
     </header>
 
@@ -54,6 +54,23 @@
 
 
 </div>
+
+
+
+##disqus comments count:
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'loglogvincent'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+    
 
 </%block>
 
