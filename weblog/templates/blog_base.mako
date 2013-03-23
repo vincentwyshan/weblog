@@ -124,12 +124,6 @@ Contact me via <a href="mailto:vincent.syshan@gmail.com">mail</a>, <a href="http
  </%block>
 
 
-<!--<script>
-  $(document).ready(function() {
-    $(".entry-title").lettering();
-  });
-</script>
--->
 </footer>
 
     </body>
