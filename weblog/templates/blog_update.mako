@@ -30,10 +30,18 @@ input[type=submit] {width:50%; display:block;margin:auto}
 %if entry:
 <input name="id" type=hidden value="${entry.id}" />
 %endif
+
 <div class="clearfix">
 <label for="title">Title</label>
 <div class="input">
 <input class="xxlarge" id="post-title" name="title" value="${entry.title if entry else ''}" />
+</div>
+</div>
+
+<div class="clearfix">
+<label for="url_kword">url_kword</label>
+<div class="input">
+<input class="xxlarge" id="post-title" name="url_kword" value="${entry.url_kword if entry else ''}" />
 </div>
 </div>
 

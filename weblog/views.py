@@ -152,6 +152,10 @@ def post(request):
         title, content = request.POST['title'], request.POST['content']
         tags = request.POST['tags']
         summary = request.POST['summary']
+        url_kword = request.POST['url_kword']
+        assert title not in ('', None), "Missing title"
+        assert url_kword not in ('', None), "Missing url_kword"
+        assert content not in ('', None), "Missing content"
         p = None
         if id:
             p = session.query(Post).get(id)
@@ -161,6 +165,7 @@ def post(request):
         p.title = title
         p.content = content
         p.summary = summary
+        p.url_kword = url_kword
         if tags:
             tags = tags.split(',')
             tags = [v.strip() for v in tags]
@@ -174,6 +179,8 @@ def post(request):
                 p.tags.pop()
             for t in tags_db:
                 p.tags.append(t)
+
+
         session.flush()
         return HTTPFound(location=request.route_url('blog_home'))
     else:
