@@ -60,7 +60,7 @@
         <span class='st_facebook_large' displayText='Facebook'></span>
         <span class='st_twitter_large' displayText='Tweet'></span>
         <span class='st_sina_large' displayText='Sina'></span>
-        <script type="text/javascript">stLight.options({publisher: "b2657899-882a-4e2b-ad5c-acdc57c3b096", doNotHash: false, doNotCopy: false, hashAddressBar: true});</script>
+        <script type="text/javascript">stLight.options({publisher: "b2657899-882a-4e2b-ad5c-acdc57c3b096", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
     </div>
 
     <p class="meta">
