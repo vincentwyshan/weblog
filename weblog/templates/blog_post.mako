@@ -54,7 +54,7 @@
     </p>
 
 
-    <div  class="sharing">
+    <div class="sharing" style="float:right;">
         <span class='st_googleplus_large' displayText='Google +'></span>
         <span class='st_reddit_large' displayText='Reddit'></span>
         <span class='st_facebook_large' displayText='Facebook'></span>
