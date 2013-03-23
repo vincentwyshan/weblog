@@ -65,11 +65,11 @@
 
     <p class="meta">
         %if prev_post:
-        <a class="basic-alignment left" href="/post/{prev_post.url}" title="${prev_post.content_title}">« ${prev_post.content_title}</a>
+        <a class="basic-alignment left" href="/post/${prev_post.url}" title="${prev_post.content_title}">« ${prev_post.content_title}</a>
         %endif
        
         %if next_post:
-        <a class="basic-alignment right" href="/post/{next_post.url}" title="${next_post.content_title}">${next_post.content_title} »</a>
+        <a class="basic-alignment right" href="/post/${next_post.url}" title="${next_post.content_title}">${next_post.content_title} »</a>
         %endif
     </p>
 
