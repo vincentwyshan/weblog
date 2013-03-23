@@ -1,5 +1,6 @@
 <%inherit file="blog_base.mako"/>
 
+
 <%block name="meta_head">
 <title>${entry.title if entry else 'New entry'}</title>
 <style type="text/css">
@@ -9,18 +10,23 @@ input[type=submit] {width:50%; display:block;margin:auto}
 #entry-links a {margin-left:10px}
 #new-entry {text-align:right; padding-right:20%}
 #delete-entry {color:red}
+#new-entry, entry-links, #update-main {padding:10px}
 </style>
 </%block>
 
 
+
 <%block name="_body">
+
+<div id="content-wraper">
+
 
 <div id="new-entry">
 <a href="/update">New entry</a>
 </div>
 
 
-<form action="/update" method="POST">
+<form id="update-main" action="/update" method="POST">
 %if entry:
 <input name="id" type=hidden value="${entry.id}" />
 %endif
@@ -59,7 +65,7 @@ name='summary'/>${entry.summary if entry else ''}</textarea>
 </div>
 </form>
 %if entry:
-<br>
+
 <form action="/delete" method="GET">
     <input hidden value="${entry.id}" name="post_id"/>
     <input type="submit" id="delete-entry" value="delete entry"/>
@@ -71,6 +77,9 @@ name='summary'/>${entry.summary if entry else ''}</textarea>
 %for e in entries:
 <a href="/update?id=${e.id}">${e.title or repr(e)}</a>
 %endfor
+</div>
+
+
 </div>
 
 </%block>
