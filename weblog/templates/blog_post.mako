@@ -3,6 +3,7 @@
 <%block name="meta_head">
 <title>${post.content_title}</title>
 
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
 </%block>
 
 
@@ -53,7 +54,14 @@
     </p>
 
 
-    <div  class="sharing"></div>
+    <div  class="sharing">
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_reddit_large' displayText='Reddit'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_sina_large' displayText='Sina'></span>
+        <script type="text/javascript">stLight.options({publisher: "b2657899-882a-4e2b-ad5c-acdc57c3b096", doNotHash: false, doNotCopy: false, hashAddressBar: true});</script>
+    </div>
 
     <p class="meta">
         %if prev_post:
