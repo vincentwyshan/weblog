@@ -18,7 +18,7 @@
     <p class="meta">
         <time>${post.date.strftime('%b %d, %Y')}</time>
         |
-        <a href="http://www.loglogvincent.com/post/${post.url}#disqus_thread">0 Comments</a>
+        <a href="http://www.loglogvincent.com/post/${post.url}#disqus_thread">COMMENTS</a>
     </p>
     </header>
 
