@@ -41,13 +41,13 @@
 <div class="pagination">
     
     %if page_num > 0:
-      <a class="prev" href="/page/${page_num-1}">← Older</a>
+      <a class="prev" href="/?page=${page_num-1}">← Older</a>
     %endif
     
-    <a href="/blog/archives">Blog Archives</a>
+    <a href="/archive">Blog Archives</a>
     
     %if max_page_num > page_num:
-    <a class="next" href="/">Newer →</a>
+    <a class="next" href="/?page=${page_num+1}">Newer →</a>
     %endif
   </div>
     

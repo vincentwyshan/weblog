@@ -17,11 +17,13 @@ from sqlalchemy import desc, asc
 from docutils.core import publish_parts
 import PyRSS2Gen
 
-from .models import (
+from weblog.football import month_name
+from weblog.models import (
     DBSession,
     Post,
     Tag,
     )
+
 
 
 def _auth(func):
@@ -65,8 +67,8 @@ def recent_posts():
 
 @view_config(route_name='blog_home', renderer='weblog:templates/blog_home.mako')
 def blog_index(request):
-    page = int(request.matchdict.get('page_num', 0))
-    posts_1page = 9
+    page = int(request.GET.get('page', 0))
+    posts_1page = 3
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))
     _posts = []
@@ -75,8 +77,39 @@ def blog_index(request):
         post.summary_html = publish_parts(post.summary, writer_name='html')['html_body']
         post.url = post.url_kword or unicode(post.id)
         _posts.append(post)
-    return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/5, 'recent_posts':recent_posts()}
+    return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/posts_1page, 'recent_posts':recent_posts()}
 
+@view_config(route_name="blog_archive", renderer="weblog:templates/blog_archive.mako")
+def blog_archive(request):
+    session = DBSession()
+    posts = session.query(Post).order_by(desc(Post.id))
+
+    title = u"Blog archives"
+    post_by_year = []
+    for post in posts:
+        post.url = post.url_kword or unicode(post.id)
+        if not post_by_year or (post.date.year != post_by_year[-1][0]):
+            post_by_year.append([post.date.year, [post]])
+        else:
+            post_by_year[-1][1].append(post)
+    return dict(post_by_year=post_by_year, recent_posts=recent_posts(), month_name=month_name, title=title)
+
+@view_config(route_name="blog_tag", renderer="weblog:templates/blog_archive.mako")
+def blog_tag(request):
+    tag_name = request.matchdict['tag_name'].strip()
+    session = DBSession()
+    tag = session.query(Tag).filter(Tag.name==tag_name)[0]
+    posts = session.query(Post).filter(Post.tags.contains(tag)).order_by(desc(Post.date))
+
+    title = u"Tag: %s" % tag_name
+    post_by_year = []
+    for post in posts:
+        post.url = post.url_kword or unicode(post.id)
+        if not post_by_year or (post.date.year != post_by_year[-1][0]):
+            post_by_year.append([post.date.year, [post]])
+        else:
+            post_by_year[-1][1].append(post)
+    return dict(post_by_year=post_by_year, recent_posts=recent_posts(), month_name=month_name, title=title)
 
 @view_config(route_name='blog_post', renderer='weblog:templates/blog_post.mako')
 def blog_post(request):
@@ -133,7 +166,7 @@ def rss(request):
 def about(request):
     description='''
     <p>I'm work at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a> as software engineer.</p>
-    <p>I keep writing code with <a href="http://www.python.org" target="_blank">Python</a>.</p>
+    <p>I keep writing code in <a href="http://www.python.org" target="_blank">Python</a>.</p>
     <p>Like all about: "open source", "linux", "traveling", "reading". </p>
     <p> Now I'm focus on "data-mining", "machine learning", "finance". </p> 
 

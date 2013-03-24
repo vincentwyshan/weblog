@@ -20,7 +20,7 @@
         %if i > 0:
             ,&nbsp;
         %endif
-        <a href="/tags/${urllib.quote(tag.name)}">${tag.name}</a>
+        <a href="/tag/${urllib.quote(tag.name)}">${tag.name}</a>
     %endfor
 </div>
 
@@ -48,7 +48,7 @@
                 %if i > 0:
                     ,
                 %endif
-                <a class="category" href="/tags/${urllib.quote(tag.name)}">${tag.name}</a>
+                <a class="category" href="/tag/${urllib.quote(tag.name)}">${tag.name}</a>
             %endfor
         </span>
     </p>

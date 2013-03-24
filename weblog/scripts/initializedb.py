@@ -14,7 +14,7 @@ from pyramid.paster import (
     setup_logging,
     )
 
-from ..models import (
+from weblog.models import (
     DBSession,
     Tag,
     Post,
@@ -77,3 +77,6 @@ Guess right?
             )
         post.tags.append(tag)
         DBSession.add(post)
+
+if __name__ == '__main__':
+    main()
