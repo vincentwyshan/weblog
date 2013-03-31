@@ -283,10 +283,7 @@ def digest_http_auth_parse(auth_str):
 _USER = {}
 def _loadusers(users):
     cfg = ConfigParser.ConfigParser()
-    path = os.path.abspath(__file__)
-    path = os.path.dirname(path)
-    path = os.path.dirname(path)
-    cfg.read(os.path.join(path, 'users.cfg'))
+    cfg.read('users.cfg')
     for user, passwd in cfg.items('users'):
         users[user] = passwd
 _loadusers(_USER)
