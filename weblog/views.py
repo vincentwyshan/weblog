@@ -283,7 +283,7 @@ _USER = {}
 def _loadusers(users):
     cfg = ConfigParser.ConfigParser()
     cfg.read('../users.cfg')
-    for user, passwd cfg.items('users'):
+    for user, passwd in cfg.items('users'):
         users[user] = passwd
 _loadusers(_USER)
 
