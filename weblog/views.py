@@ -4,6 +4,7 @@ import re
 import time
 import StringIO
 import datetime
+import ConfigParser
 from hashlib import md5
 
 from pyramid.response import Response
@@ -278,8 +279,14 @@ def digest_http_auth_parse(auth_str):
         result[m.group('name')] = val
     return result
 
-#TODO don't hardcode user-password here
-_USER = {'vincent' : 'v1984913'}
+_USER = {}
+def _loadusers(users):
+    cfg = ConfigParser.ConfigParser()
+    cfg.read('../users.cfg')
+    for user, passwd cfg.items('users'):
+        users[user] = passwd
+_loadusers(_USER)
+
 def digest_http_auth_valid(auth_str, method):
     """response=MD5(HA1:nonce:nonceCount:clientNonce:qop:HA2)
     HA1=MD5(username:realm:password)
