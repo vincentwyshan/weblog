@@ -11,7 +11,11 @@ from hashlib import md5
 from pyramid.response import Response
 from pyramid.view import view_config
 
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPUnauthorized
+from pyramid.httpexceptions import (
+        HTTPFound,
+        HTTPNotFound, 
+        HTTPUnauthorized,
+)
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import desc, asc
@@ -21,10 +25,11 @@ import PyRSS2Gen
 
 from weblog.football import month_name
 from weblog.models import (
-    DBSession,
-    Post,
-    Tag,
-    )
+        DBSession,
+        Post,
+        Tag,
+)
+
 
 
 
