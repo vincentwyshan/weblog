@@ -10,6 +10,7 @@ Dependencies
 
 Install
 ---------------
+- python setup.py install
 - Check file weblog/scripts/startserver
 
 
