@@ -34,7 +34,7 @@
   					%if i == 0:
   					<a class="category" href="/tag/${tag.name}">${tag.name}</a>
   					%else:
-  					", "
+  					,&nbsp;
   					<a class="category" href="/tag/${tag.name}">${tag.name}</a>
   					%endif
   				%endfor
