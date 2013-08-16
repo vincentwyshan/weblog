@@ -75,7 +75,6 @@ def recent_posts():
 
 @cache_region('default_term', 'index')
 def blog_index(page):
-    print '\n\nCALL ME\n'
     posts_1page = 9
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))
