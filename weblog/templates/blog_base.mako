@@ -27,6 +27,8 @@
 </%block>
 
 
+<link rel="icon" type="image/x-icon" href="/static/favicon.png" />
+
 </head>
 
 
