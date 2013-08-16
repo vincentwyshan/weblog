@@ -91,7 +91,7 @@ def blog_archive(request):
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.id))
 
-    title = u"Blog archives"
+    title = u"ARCHIVES"
     post_by_year = []
     for post in posts:
         post.url = post.url_kword or unicode(post.id)
@@ -172,10 +172,10 @@ def rss(request):
 @view_config(route_name='blog_about', renderer="weblog:templates/blog_about.mako")
 def about(request):
     description='''
-    <p>I'm work at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a> as software engineer.</p>
-    <p>I keep writing code in <a href="http://www.python.org" target="_blank">Python</a>.</p>
-    <p>Like all about: "open source", "linux", "traveling", "reading". </p>
-    <p> Now I'm focus on "data-mining", "machine learning", "finance". </p> 
+    <p>I'm vincent, software engineer at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a>.</p>
+    <p>I use<a href="http://www.python.org" target="_blank">Python</a> for over 5 years.</p>
+    <p>I like all about: "open source", "linux", "python", "web development", "reading". </p>
+    <p>Now I'm focus on "data-mining", "machine learning", "financial engineering". </p> 
 
 
 
@@ -288,7 +288,8 @@ def digest_http_auth_parse(auth_str):
 _USER = {}
 def _loadusers(users):
     cfg = ConfigParser.ConfigParser()
-    cfg.read('users.cfg')
+    path = os.path.join(os.path.dirname(__file__), 'users.cfg')
+    cfg.read(path)
     for user, passwd in cfg.items('users'):
         users[user] = passwd
 _loadusers(_USER)
