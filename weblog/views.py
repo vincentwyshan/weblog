@@ -19,6 +19,7 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import desc, asc
+from beaker.cache import cache_region
 
 from docutils.core import publish_parts
 import PyRSS2Gen
@@ -72,9 +73,9 @@ def recent_posts():
         result.append(p)
     return result
 
-@view_config(route_name='blog_home', renderer='weblog:templates/blog_home.mako')
-def blog_index(request):
-    page = int(request.GET.get('page', 0))
+@cache_region('default_term', 'index')
+def blog_index(page):
+    print '\n\nCALL ME\n'
     posts_1page = 9
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))
@@ -86,8 +87,13 @@ def blog_index(request):
         _posts.append(post)
     return {'posts':_posts, 'page_num':page, 'max_page_num':posts.count()/posts_1page, 'recent_posts':recent_posts()}
 
-@view_config(route_name="blog_archive", renderer="weblog:templates/blog_archive.mako")
-def blog_archive(request):
+@view_config(route_name='blog_home', renderer='weblog:templates/blog_home.mako')
+def view_index(request):
+    page = int(request.GET.get('page', 0))
+    return blog_index(page)
+
+@cache_region('default_term', 'archive')
+def blog_archive():
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.id))
 
@@ -101,9 +107,12 @@ def blog_archive(request):
             post_by_year[-1][1].append(post)
     return dict(post_by_year=post_by_year, recent_posts=recent_posts(), month_name=month_name, title=title)
 
-@view_config(route_name="blog_tag", renderer="weblog:templates/blog_archive.mako")
-def blog_tag(request):
-    tag_name = request.matchdict['tag_name'].strip()
+@view_config(route_name="blog_archive", renderer="weblog:templates/blog_archive.mako")
+def view_archive(request):
+    return blog_archive()
+
+@cache_region('default_term', 'tag')
+def blog_tag(tag_name):
     session = DBSession()
     tag = session.query(Tag).filter(Tag.name==tag_name)[0]
     posts = session.query(Post).filter(Post.tags.contains(tag)).order_by(desc(Post.date))
@@ -118,9 +127,13 @@ def blog_tag(request):
             post_by_year[-1][1].append(post)
     return dict(post_by_year=post_by_year, recent_posts=recent_posts(), month_name=month_name, title=title)
 
-@view_config(route_name='blog_post', renderer='weblog:templates/blog_post.mako')
-def blog_post(request):
-    kword_or_id = request.matchdict['kword_or_id'].strip()
+@view_config(route_name="blog_tag", renderer="weblog:templates/blog_archive.mako")
+def view_tag(request):
+    tag_name = request.matchdict['tag_name'].strip()
+    return blog_tag(tag_name)
+
+@cache_region('default_term', 'post')
+def blog_post(kword_or_id):
     session = DBSession()
     post = session.query(Post).filter(Post.url_kword==kword_or_id).first()
     if not post and kword_or_id.isdigit():
@@ -151,9 +164,14 @@ def blog_post(request):
             'prev_post': prev_post, 'next_post':next_post}
 
 
-@view_config(route_name='blog_rss')
-def rss(request):
-    host = request.host
+@view_config(route_name='blog_post', renderer='weblog:templates/blog_post.mako')
+def view_post(request):
+    kword_or_id = request.matchdict['kword_or_id'].strip()
+    return blog_post(kword_or_id)
+
+
+@cache_region('long_term', 'rss')
+def rss(host):
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))[:20]
     rss = PyRSS2Gen.RSS2(
@@ -169,8 +187,13 @@ def rss(request):
     response.content_type = "application/rss+xml"
     return response
 
-@view_config(route_name='blog_about', renderer="weblog:templates/blog_about.mako")
-def about(request):
+@view_config(route_name='blog_rss')
+def view_rss(request):
+    host = request.host
+    return rss(host)
+
+@cache_region('default_term', 'about')
+def about():
     description='''
     <p>I'm vincent, software engineer at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a>.</p>
     <p>I use<a href="http://www.python.org" target="_blank">Python</a> for over 5 years.</p>
@@ -181,6 +204,10 @@ def about(request):
 
     '''
     return {'description':description, 'recent_posts':recent_posts()}
+
+@view_config(route_name='blog_about', renderer="weblog:templates/blog_about.mako")
+def view_about(request):
+    return about()
 
 
 @view_config(route_name='blog_insert_update', renderer='weblog:templates/blog_update.mako')
