@@ -194,7 +194,7 @@ def view_rss(request):
 def about():
     description='''
     <p>I'm vincent, software engineer at <a href="http://www.capitalvue.com" target="_blank">Capitalvue</a>.</p>
-    <p>I use<a href="http://www.python.org" target="_blank">Python</a> for over 5 years.</p>
+    <p>I use <a href="http://www.python.org" target="_blank">Python</a> for over 5 years.</p>
     <p>I like all about: "open source", "linux", "python", "web development", "reading". </p>
     <p>Now I'm focus on "data-mining", "machine learning", "financial engineering". </p> 
 
