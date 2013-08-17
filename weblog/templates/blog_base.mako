@@ -113,8 +113,25 @@
 
                 </ul>
             </section>
+
+        <section style="margin-left:-19px;margin-right:-21px;">
+            <script type="text/javascript"><!--
+google_ad_client = "ca-pub-4437481021897447";
+/* VINCENT BLOG */
+google_ad_slot = "4899642013";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+        </section>
+
+
         </aside>
 
+        
     </div>
 </div>
 
@@ -126,7 +143,7 @@
 <footer style="text-align:center;">
     <%block name="footer">
 
-    <p>© Copyright 2013 by Vincent w. 
+    <p>© Copyright 2012 by Vincent w. 
     Contact me via <a href="mailto:vincent.syshan@gmail.com">mail</a>, <a href="http://weibo.com/2119986460">weibo</a>, <a href="https://github.com/vincentwyshan">github</a>. </p>
     </%block>
 
@@ -147,19 +164,6 @@ _gaq.push(['_trackPageview']);
  })();
 
 </script>
-
-        <script type="text/javascript"><!--
-google_ad_client = "ca-pub-4437481021897447";
-/* VINCENT BLOG */
-google_ad_slot = "4899642013";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
 
 
 </body>
