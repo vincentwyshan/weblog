@@ -173,13 +173,12 @@ def view_post(request):
 def rss(host):
     session = DBSession()
     posts = session.query(Post).order_by(desc(Post.timestamp))[:20]
-    rss = PyRSS2Gen.RSS2(
-            title = "Vincent's Blog feed",
-            link = host,
-            description = "Vincent's work, life ...",
-            lastBuildDate = datetime.datetime.utcnow(), 
-            items = [_rss_item(host,p) for p in posts]
-            )
+    rss = PyRSS2Gen.RSS2( title="Vincent's Blog feed", 
+                         link=u'http://' + host, 
+                         description="Vincent's blog...", 
+                         lastBuildDate=datetime.datetime.utcnow(), 
+                         items=[_rss_item(host,p) for p in posts]
+                         )
     f = StringIO.StringIO()
     rss.write_xml(f, encoding='utf8')
     response = Response(f.getvalue())
