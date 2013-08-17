@@ -1,7 +1,7 @@
 <%inherit file="blog_base.mako" />
 
 <%block name="meta_head">
-<title>Blog | Vincent W's Thoughts and Writings</title>
+<title>Blog | Vincent W</title>
 </%block>
 
 
