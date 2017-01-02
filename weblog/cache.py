@@ -30,6 +30,6 @@ def cache_view(timeout):
 
 def check_mtime(path, timeout):
     st_time = os.stat(path).st_mtime
-    if (st_time + timeout) > time.time():
+    if (st_time + timeout) < time.time():
         return False
     return True
