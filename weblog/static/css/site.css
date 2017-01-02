@@ -5,7 +5,7 @@ a:hover{border-color:#444}#nav{float:right}#nav a{font-size:16px;margin-right:15
 .entry-content h2>a,
 .entry-content h3>a,
 .entry-content h4>a,
-.entry-content h5>a,
+.entry-content h5>a
 {
 border-bottom: 0;
 text-decoration: none;
@@ -14,7 +14,8 @@ text-decoration: none;
 .hentry .entry-content h1,
 .hentry .entry-content h2,
 .hentry .entry-content h3,
-.hentry .entry-content h5,
+.hentry .entry-content h4,
+.hentry .entry-content h5
 {
     margin-top: 2em;
     border-bottom: 1px solid #eee;
