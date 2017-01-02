@@ -170,6 +170,8 @@ def edit(request):
             new_tags = []
             for name in tags.split(','):
                 name = name.strip()
+                if not name:
+                    continue
                 tag = DBSession.query(Tag).filter_by(name=name).first()
                 if not tag:
                     tag = Tag(name=name)
