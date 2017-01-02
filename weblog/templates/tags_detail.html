@@ -1,0 +1,26 @@
+<%inherit file="base.html"/>
+
+    <div class="entry-header">
+        <div class="container yue">
+            <p class="entry-description">
+                <span id="entry-count">${len(tag.posts)} entries</span>
+                in the
+                <strong id="entry-category">#${tag.name}</strong> category.</p>
+        </div>
+    </div>
+
+    <div id="main" class="container yue">
+        <style>
+            .archive-list>.entry-item>time{
+                font-size: 90%;
+            }
+        </style>
+        <ul class="archive-list">
+            %for post in tag.posts:
+            <li class="entry-item">
+                <time>${post.created.strftime("%b %d, %Y")}</time>
+                <a href="/post/${post.url_kword | u}">${post.title}</a>
+            </li>
+            %endfor
+        </ul>
+    </div>

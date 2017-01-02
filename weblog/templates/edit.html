@@ -1,0 +1,44 @@
+<%inherit file="base.html"/>
+
+    <div id="main" class="container yue">
+        <p style="color:red">
+            ${error_msg}
+        </p>
+        <style type="text/css">
+            input, textarea {
+                width: 100%
+            }
+            input[type=submit]{
+                width: 50%;
+            }
+        </style>
+        <form action="${request.path}" method="POST">
+            <input type="hidden" name="id" value="${post.id if post.id else ''}"/>
+            <label>title</label>
+            <input name="title" value="${post.title if post.title else ''}" placeholder="title"/>
+            <label>url_kword</label>
+            <input name="url_kword" value="${post.url_kword if post.url_kword else ''}" placeholder="url_kword"/>
+            <label>tags</label>
+            <input name="tags" value="${tags}" placeholder="tags"/>
+            <label>summary</label>
+            <input name="summary" value="${post.summary if post.summary else ''}" placeholder="summary"/>
+            <textarea name="content" rows="25">${post.content if post.content else ''}</textarea>
+            <center>
+                <input type="submit" />
+            </center>
+        </form>
+
+        <div class="paginator" role="navigation">
+            %if post_prev:
+            <a class="previous" href="/edit/${post_prev.id}">${post_prev.title}</a>
+            %else:
+            <span class="previous">Previous</span>
+            %endif
+            <em>@_@</em>
+            %if post_next:
+            <a class="next" href="/edit/${post_next.id}">${post_next.title}</a>
+            %else:
+            <a class="next" href="/edit">$_Create New_$</a>
+            %endif
+        </div>
+    </div>

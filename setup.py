@@ -3,26 +3,29 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+with open(os.path.join(here, 'README.txt')) as f:
+    README = f.read()
+with open(os.path.join(here, 'CHANGES.txt')) as f:
+    CHANGES = f.read()
 
 requires = [
     'pyramid',
+    'pyramid_chameleon',
+    'pyramid_debugtoolbar',
+    'pyramid_tm',
     'SQLAlchemy',
     'transaction',
-    'pyramid_tm',
-    'pyramid_beaker',
-    'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
+    'mako',
+    'pyramid_mako',
     'docutils',
-    'PyRSS2Gen',
-    ]
+]
 
 setup(name='weblog',
       version='0.0',
       description='weblog',
-      long_description=README + '\n\n' +  CHANGES,
+      long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",
@@ -44,6 +47,4 @@ setup(name='weblog',
       [console_scripts]
       initialize_weblog_db = weblog.scripts.initializedb:main
       """,
-      scripts=['weblog/scripts/startserver']
       )
-

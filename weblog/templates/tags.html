@@ -1,0 +1,30 @@
+<%inherit file="base.html"/>
+
+<div class="entry-header">
+    <div class="container yue">
+        <p class="entry-description" style="margin-bottom: 0;"><strong id="entry-category">Tags</strong></p>
+    </div>
+</div>
+
+<div id="main" class="container yue">
+    <style>
+        ul.archive-list li {
+            display: inline;
+            padding: 10px;
+        }
+        ul.archive-list li a {
+            text-decoration: underline;
+        }
+        ul.archive-list li a:hover {
+            color: #d45e13;
+            border-color: #d45e13;
+        }
+    </style>
+    <ul class="archive-list" role="main">
+        %for name, value in tags.items():
+        <li class="entry-item">
+            <a href="/tags/${name | u}" style="font-size: ${value*100.0}%">${name}</a>
+        </li>
+        %endfor
+    </ul>
+</div>

@@ -1,10 +1,5 @@
-#coding=utf8
-
-
 import os
 import sys
-import time
-import datetime
 import transaction
 
 from sqlalchemy import engine_from_config
@@ -14,69 +9,36 @@ from pyramid.paster import (
     setup_logging,
     )
 
-from weblog.models import (
+from pyramid.scripts.common import parse_vars
+
+from ..models import (
     DBSession,
-    Tag,
-    Post,
+    Post, Tag,
     Base,
     )
 
+
 def usage(argv):
     cmd = os.path.basename(argv[0])
-    print('usage: %s <config_uri>\n'
-          '(example: "%s development.ini")' % (cmd, cmd)) 
+    print('usage: %s <config_uri> [var=value]\n'
+          '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
+
 def main(argv=sys.argv):
-    if len(argv) != 2:
+    if len(argv) < 2:
         usage(argv)
     config_uri = argv[1]
+    options = parse_vars(argv[2:])
     setup_logging(config_uri)
-    settings = get_appsettings(config_uri)
+    settings = get_appsettings(config_uri, options=options)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        tag = Tag(name='start from here')
-        DBSession.add(tag)
-        post = Post(title='Hello world!', content='''
-**welcome**
-
-- writen posts by reStructText 
-- python and pyramid are used for building this blog''',
-                timestamp=time.time(), date=datetime.datetime.today(),
-                url_kword="start-from-here",
-                summary="Hellow world post.",
-                )
-        post.tags.append(tag)
-        DBSession.add(post)
-        post = Post(title='', content='''
-======
-Title
-======
-
-
-.. contents::
-
-
-A new start from here
-=====================
-
-- It's cool
-- It's simple
-- It's fast
-
-Right, reStructText
-===================
-
-Guess right?
-'''
-            , timestamp=time.time(),
-            date=datetime.datetime.today(), url_kword="new-start-post",
-            summary="Another hello world test post."
-            )
-        post.tags.append(tag)
-        DBSession.add(post)
-
-if __name__ == '__main__':
-    main()
+        model = Post()
+        model.title = u"Test"
+        model.summary = u"A summary for testing"
+        model.content = u"Big Test, content for testing"
+        model.url_kword = u"a-test-post"
+        DBSession.add(model)

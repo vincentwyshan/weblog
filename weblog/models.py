@@ -1,19 +1,18 @@
 #coding=utf8
 
-import time
+import datetime
 
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import (
     Column,
-    Integer,
-    Text,
+    Index,
     Unicode,
-    DATE,
+    Integer,
+    UnicodeText,
     Table,
     ForeignKey,
+    DateTime,
     )
-
-
-from sqlalchemy.orm import relationship
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -24,60 +23,33 @@ from sqlalchemy.orm import (
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(),
+                                        expire_on_commit=False))
 Base = declarative_base()
 
+
 class Tag(Base):
-    __tablename__ = 'tag'
+    __tablename__ = 't_tag'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(55))
+    created = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    timestamp = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now, nullable=False)
 
-rel_post_tag = Table('rel_post_tag', Base.metadata,
-        Column('post_id', Integer, ForeignKey('post.id')),
-        Column('tag_id', Integer, ForeignKey('tag.id'))
+
+rel_post_tag = Table('r_post_tag', Base.metadata,
+        Column('post_id', Integer, ForeignKey('t_post.id')),
+        Column('tag_id', Integer, ForeignKey('t_tag.id'))
         )
 
+
 class Post(Base):
-    __tablename__ = 'post'
+    __tablename__ = 't_post'
     id = Column(Integer, primary_key=True)
     title = Column(Unicode(255), nullable=False)
-    url_kword = Column(Unicode(55))
-    summary = Column(Text)
-    content = Column(Text) #REST content
-    timestamp = Column(Integer, nullable=False)
-    date = Column(DATE, nullable=False)
-    tags = relationship('Tag', secondary=lambda:rel_post_tag, backref='posts')
-    click_counter = Column(Integer, default=0)
+    url_kword = Column(Unicode(55), unique=True, nullable=False)
+    summary = Column(Unicode(140))
+    content = Column(UnicodeText)
+    tags = relationship('Tag', secondary=lambda: rel_post_tag, backref='posts')
+    created = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    timestamp = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now, nullable=False)
 
-
-def populate():
-    session = DBSession()
-    q = session.query(Post)
-    if q.count() == 0:
-        session.bind.execute('delete from post')
-        session.bind.execute('delete from category')
-        session.bind.execute('delete from tag')
-        session.bind.execute('delete from rel_post_tag')
-        tag = Tag(name='start from here')
-        session.add(tag)
-        post = Post(title='Hello world!', content='''
-**welcome**
-
-- writen posts by reStructText 
-- python and pyramid are used for building this blog''',
-                timestamp=time.time(), date=datetime.datetime.today())
-        post.tags.append(tag)
-        post.category = category
-        #session.add(model)
-        session.add(post)
-        session.flush()
-    transaction.commit()
-
-def initialize_sql(engine):
-    DBSession.configure(bind=engine)
-    Base.metadata.bind = engine
-    Base.metadata.create_all(engine)
-    try:
-        populate()
-    except IntegrityError:
-        transaction.abort() 
