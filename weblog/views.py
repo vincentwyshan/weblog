@@ -10,14 +10,18 @@ from sqlalchemy import desc
 from sqlalchemy import func
 from docutils.core import publish_parts
 
+from pyramid.renderers import render_to_response
+
 from weblog.security import auth
+from weblog.cache import cache_view
 from weblog.models import (
     DBSession,
     Post, Tag, rel_post_tag
 )
 
 
-@view_config(route_name='home', renderer='templates/home.html')
+@view_config(route_name='home')
+@cache_view(60)
 def home(request):
     with transaction.manager:
         posts = DBSession.query(Post)
@@ -31,10 +35,14 @@ def home(request):
         posts = posts.offset((current-1) * pagi.num_per_page)
         posts = posts.limit(pagi.num_per_page)
 
-        return {'posts': posts, 'title': u"Vincent's footprint", 'pagi': pagi}
+        context = {
+            'posts': posts, 'title': u"Vincent's footprint", 'pagi': pagi
+        }
+        return render_to_response("templates/home.html", context)
 
 
-@view_config(route_name="post", renderer="templates/post.html")
+@view_config(route_name="post")
+@cache_view(60)
 def post(request):
     with transaction.manager:
         url_kword = request.matchdict['url_kword']
@@ -49,10 +57,14 @@ def post(request):
         parts = publish_parts(post.content, writer_name='html')
         html_body = parts['body']
 
-        return {'post': post, 'title': post.title, 'post_content': html_body}
+        context = {
+            'post': post, 'title': post.title, 'post_content': html_body
+        }
+        return render_to_response("templates/post.html", context)
 
 
-@view_config(route_name="tags", renderer="templates/tags.html")
+@view_config(route_name="tags")
+@cache_view(60)
 def tags(request):
     _tags = list(DBSession.query(Tag))
     _tags = {
@@ -73,10 +85,12 @@ def tags(request):
             continue
         _tags[name] = 1 + ((val - min_num)*1.0 / distance)
 
-    return {'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT"}
+    context = {'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT"}
+    return render_to_response("templates/tags.html", context)
 
 
-@view_config(route_name="tag_posts", renderer="templates/tags_detail.html")
+@view_config(route_name="tag_posts")
+@cache_view(60)
 def tags_detail(request):
     tag_name = request.matchdict['name'].strip()
     tag = DBSession.query(Tag).filter_by(name=tag_name).first()
@@ -86,12 +100,15 @@ def tags_detail(request):
     posts = list(tag.posts)
     del posts
 
-    return {'tag': tag, 'title': u"Tag: %s" % tag.name}
+    context = {'tag': tag, 'title': u"Tag: %s" % tag.name}
+    return render_to_response("templates/tags_detail.html", context)
 
 
-@view_config(route_name="about", renderer="templates/about.html")
+@view_config(route_name="about")
+@cache_view(60)
 def about(request):
-    return dict(title="About | VINCENT'S FOOTPRINT")
+    context = dict(title="About | VINCENT'S FOOTPRINT")
+    return render_to_response("templates/about.html", context)
 
 
 @view_config(route_name="edit", renderer="templates/edit.html")
