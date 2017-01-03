@@ -17,7 +17,8 @@
             <label>title</label>
             <input name="title" value="${post.title if post.title else ''}" placeholder="title"/>
             <label>url_kword</label>
-            <input name="url_kword" value="${post.url_kword if post.url_kword else ''}" placeholder="url_kword"/>
+            <input ${"disabled" if post.url_kword else ''} name="url_kword"
+            value="${post.url_kword if post.url_kword else ''}" placeholder="url_kword"/>
             <label>tags</label>
             <input name="tags" value="${tags}" placeholder="tags"/>
             <label>summary</label>
