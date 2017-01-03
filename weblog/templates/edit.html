@@ -18,7 +18,7 @@
             <input name="title" value="${post.title if post.title else ''}" placeholder="title"/>
             <label>url_kword</label>
             %if post.url_kword:
-            <input name="url_kword" value="value="${post.url_kword if post.url_kword else ''} type="hidden"/>
+            <input name="url_kword" value="${post.url_kword}" type="hidden"/>
             <input ${"disabled" if post.url_kword else ''}
             value="${post.url_kword if post.url_kword else ''}" placeholder="url_kword"/>
             %else:
