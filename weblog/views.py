@@ -36,7 +36,8 @@ def home(request):
         posts = posts.limit(pagi.num_per_page)
 
         context = {
-            'posts': posts, 'title': u"Vincent's footprint", 'pagi': pagi
+            'posts': posts, 'title': u"Vincent's footprint", 'pagi': pagi,
+            'request': request
         }
         return render_to_response("templates/home.html", context)
 
@@ -58,7 +59,8 @@ def post(request):
         html_body = parts['body']
 
         context = {
-            'post': post, 'title': post.title, 'post_content': html_body
+            'post': post, 'title': post.title, 'post_content': html_body,
+            'request': request
         }
         return render_to_response("templates/post.html", context)
 
@@ -85,7 +87,10 @@ def tags(request):
             continue
         _tags[name] = 1 + ((val - min_num)*1.0 / distance)
 
-    context = {'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT"}
+    context = {
+        'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT",
+        'request': request
+    }
     return render_to_response("templates/tags.html", context)
 
 
@@ -100,14 +105,14 @@ def tags_detail(request):
     posts = list(tag.posts)
     del posts
 
-    context = {'tag': tag, 'title': u"Tag: %s" % tag.name}
+    context = {'tag': tag, 'title': u"Tag: %s" % tag.name, 'request': request}
     return render_to_response("templates/tags_detail.html", context)
 
 
 @view_config(route_name="about")
 @cache_view(60)
 def about(request):
-    context = dict(title="About | VINCENT'S FOOTPRINT")
+    context = dict(title="About | VINCENT'S FOOTPRINT", request=request)
     return render_to_response("templates/about.html", context)
 
 
@@ -193,6 +198,17 @@ def edit(request):
         tags = u','.join([t.name for t in post.tags])
         post_prev, post_next = get_navigator()
         return locals()
+
+
+@view_config(route_name='language')
+def language(request):
+    lang = request.params.get('lang')
+    response = HTTPFound(request.referrer or '/')
+    if lang == 'zh_CN':
+        response.set_cookie('_LOCALE_', 'zh_CN', max_age=3600*24*365)
+    else:
+        response.set_cookie('_LOCALE_', 'en', max_age=3600*24*365)
+    return response
 
 
 class Temp:

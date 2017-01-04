@@ -20,8 +20,8 @@
                 <strong>Vincent Wen's footprint</strong>
             </a>
             <nav id="nav">
-                <a href="/about">About</a>
-                <a href="/tags">TAGS</a>
+                <a href="/about">${request._(u'About')}</a>
+                <a href="/tags">${request._(u'TAGS')}</a>
             </nav>
         </div>
     </header>
@@ -30,7 +30,15 @@
 
     <footer id="footer">
         <div class="container">
-            <p>© Copyright 2015 - 2016 by Vincent Wen.</p>
+            <p>
+                © Copyright 2015 - 2016 by Vincent Wen.
+                &nbsp;&nbsp;
+                <a href="/language?lang=zh_CN"
+                   style="${'' if request.localizer.locale_name == 'zh_CN' else 'color: #999;'}">中文</a>
+                &nbsp;
+                <a href="/language?lang=en"
+                   style="${'' if request.localizer.locale_name == 'en' else 'color: #999;'}">English</a>
+            </p>
         </div>
     </footer>
 

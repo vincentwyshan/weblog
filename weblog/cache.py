@@ -15,8 +15,11 @@ def cache_view(timeout):
     def call(func):
         def wraper(*karg, **kwargs):
             request = karg[1]
+            if request.registry.settings.USER_NAME == 'test':
+                return func(request)
             path = request.path
-            key = hashlib.md5(path).hexdigest()
+            locale_name = (request.localizer.locale_name or '');
+            key = hashlib.md5(path + locale_name).hexdigest()
             path = os.path.join(_ROOTDIR, key)
             if os.path.exists(path) and check_mtime(path, timeout):
                 return cPickle.load(open(path, 'rb'))

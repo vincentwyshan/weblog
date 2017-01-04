@@ -20,11 +20,17 @@ def main(global_config, **settings):
     config.include('pyramid_mako')
     config.add_mako_renderer('.html')
 
+    # i18n
+    from weblog.common import _t
+    config.add_request_method(_t, '_')
+    config.add_translation_dirs("weblog:locale")
+
     config.add_route('home', '/')
     config.add_route('post', '/post/{url_kword}')
     config.add_route('tags', '/tags')
     config.add_route('tag_posts', '/tags/{name}')
     config.add_route('about', '/about')
+    config.add_route('language', '/language')
 
     config.add_route('add', '/edit')
     config.add_route('edit', '/edit/{post_id}')
