@@ -22,6 +22,8 @@ requires = [
     'mako',
     'pyramid_mako',
     'docutils',
+    'pillow',
+    'pyrss2gen',
 ]
 
 

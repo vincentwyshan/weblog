@@ -31,6 +31,12 @@ def main(global_config, **settings):
     config.add_route('tag_posts', '/tags/{name}')
     config.add_route('about', '/about')
     config.add_route('language', '/language')
+    config.add_route('rss', '/rss')
+
+    config.add_route('images', '/images')
+    config.add_route('image_submit', '/image-submit')
+
+    config.add_route('resource_img', '/resource/image/{img_name}')
 
     config.add_route('add', '/edit')
     config.add_route('edit', '/edit/{post_id}')

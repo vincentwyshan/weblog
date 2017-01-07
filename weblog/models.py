@@ -12,6 +12,7 @@ from sqlalchemy import (
     Table,
     ForeignKey,
     DateTime,
+    LargeBinary,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -53,3 +54,14 @@ class Post(Base):
     created = Column(DateTime, default=datetime.datetime.now, nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now, nullable=False)
 
+
+class Image(Base):
+    __tablename__ = 't_image'
+    id = Column(Integer, primary_key=True)
+    md5 = Column(Unicode(32), unique=True)
+    image_raw = Column(LargeBinary)
+    image_thumbnail = Column(LargeBinary)
+    image_ext = Column(Unicode(5))
+    created = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    timestamp = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now, nullable=False)
+Index("image_md5", Image.md5, unique=True)

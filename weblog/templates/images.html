@@ -1,0 +1,131 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit page</title>
+    <link rel="stylesheet" href="/static/foundation/css/foundation.css">
+    <link rel="stylesheet" href="/static/foundation/css/app.css">
+    <style>
+        button.orbit-next,
+        button.orbit-previous {
+            background-color: rgba(10, 10, 10, 0.5);
+            /*            top: 50px;*/
+            cursor: pointer;
+        }
+        
+        .thumbnail {
+            margin-bottom: 0;
+            height: 100%;
+            margin-top: 1px;
+        }
+        
+        .row {
+            /*            height: 100px;*/
+            margin-left: 48px;
+            margin-right: 48px;
+        }
+        
+        .columns {
+            height: 100%;
+        }
+        
+        .columns:last-child {
+            position: relative;
+            /*            text-align: center;*/
+        }
+        
+        label.button {
+            position: absolute;
+            top: calc( 50% - 17px);
+        }
+
+        img {
+            max-height: 100px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="row">
+        %if len(images) == 5:
+        <button class="orbit-previous" tabindex="0"
+                onclick="window.location.href='/images?page=${page+1}'">
+            <span class="show-for-sr">Previous
+            Slide</span>◀︎
+        </button>
+        %else:
+        <button class="orbit-previous" tabindex="0"><span class="show-for-sr">Previous Slide</span>◀︎</button>
+        %endif
+
+        <div class="small-2 columns text-center">
+            %if len(images) >= 1:
+            <img class="thumbnail" src="/resource/image/${images[0].md5}.${images[0].image_ext}?thumbnail">
+            %else:
+            &nbsp;
+            %endif
+        </div>
+        <div class="small-2 columns text-center">
+            %if len(images) >= 2:
+            <img class="thumbnail" src="/resource/image/${images[1].md5}.${images[1].image_ext}?thumbnail">
+            %else:
+            &nbsp;
+            %endif
+
+        </div>
+        <div class="small-2 columns text-center">
+            %if len(images) >= 3:
+            <img class="thumbnail" src="/resource/image/${images[2].md5}.${images[2].image_ext}?thumbnail">
+            %else:
+            &nbsp;
+            %endif
+
+        </div>
+        <div class="small-2 columns text-center">
+            %if len(images) >= 4:
+            <img class="thumbnail" src="/resource/image/${images[3].md5}.${images[3].image_ext}?thumbnail">
+            %else:
+            &nbsp;
+            %endif
+
+        </div>
+        <div class="small-2 columns text-center">
+            %if len(images) == 5:
+            <img class="thumbnail" src="/resource/image/${images[4].md5}.${images[4].image_ext}?thumbnail">
+            %else:
+            &nbsp;
+            %endif
+        </div>
+
+
+        <div class="small-2 columns">
+            <form action="/image-submit" method="POST" id="form" accept-charset="utf-8" enctype="multipart/form-data">
+                <label for="file-upload" class="button small">上传图片</label>
+                <input type="file" accept="jpg|jpeg|png" id="file-upload" name="image" class="show-for-sr">
+                <script>
+                    document.getElementById("file-upload").onchange = function() {
+                        document.getElementById("form").submit();
+                    };
+                </script>
+            </form>
+        </div>
+        %if page > 1:
+        <button class="orbit-next disabled" tabindex="0"
+                onclick="window.location.href='/images?page=${page-1}'">
+            <span class="show-for-sr">Next Slide</span>▶︎</button>
+        %else:
+        <button class="orbit-next disabled" tabindex="0"><span class="show-for-sr">Next Slide</span>▶︎</button>
+        %endif
+    </div>
+
+    <script src="/static/foundation/js/vendor/jquery.js"></script>
+    <script src="/static/foundation/js/vendor/what-input.js"></script>
+    <script src="/static/foundation/js/vendor/foundation.js"></script>
+    <script src="/static/foundation/js/app.js"></script>
+</body>
+
+</html>

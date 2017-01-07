@@ -1,8 +1,14 @@
 #coding=utf8
 
 import urllib
+import hashlib
+import mimetypes
+import urlparse
+import datetime
+import StringIO
 
 import transaction
+from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 
@@ -11,12 +17,14 @@ from sqlalchemy import func
 from docutils.core import publish_parts
 
 from pyramid.renderers import render_to_response
+import PyRSS2Gen
 
 from weblog.security import auth
 from weblog.cache import cache_view
+from weblog.common import thumbnail
 from weblog.models import (
     DBSession,
-    Post, Tag, rel_post_tag
+    Post, Tag, rel_post_tag, Image
 )
 
 
@@ -116,8 +124,102 @@ def about(request):
     return render_to_response("templates/about.html", context)
 
 
-@view_config(route_name="edit", renderer="templates/edit.html")
-@view_config(route_name="add", renderer="templates/edit.html")
+@view_config(route_name="rss")
+def rss(request):
+    with transaction.manager:
+        host = request.host
+        posts = DBSession.query(Post).order_by(desc(Post.id))
+        posts = posts.limit(30)
+        rss = PyRSS2Gen.RSS2(title="VINCENTSFOOTPRINT Blog Feed",
+                             link=u'http://' + host,
+                             description="VINCENTSFOOTPRINT Blog Feed",
+                             lastBuildDate=datetime.datetime.utcnow(),
+                             items=[rss_item(host, p) for p in posts]
+                             )
+        f = StringIO.StringIO()
+        rss.write_xml(f, encoding='utf8')
+        response = Response(f.getvalue())
+        response.content_type = "application/rss+xml"
+        return response
+
+
+def rss_item(host, post):
+    pubdate = post.created
+    html = publish_parts(post.content, writer_name='html')['html_body']
+    link = "http://%s/post/%s" % (host, post.url_kword)
+    return PyRSS2Gen.RSSItem(
+            title=post.title,
+            link=link,
+            description=html,
+            guid=link,#PyRSS2Gen.Guid("http://%s/%s"%(host,str(post.timestamp))),
+            pubDate=pubdate,
+            )
+
+
+@view_config(route_name="images", renderer="templates/images.html")
+@auth
+def images(request):
+    with transaction.manager:
+        page_number = int(request.params.get('page', 1))
+        page_length = 5
+        image_list = DBSession.query(Image).order_by(Image.id.desc())
+        image_list = image_list.offset((page_number-1) * page_length)
+        image_list = image_list.limit(page_length)
+        image_list = list(image_list)
+        image_list.reverse()
+        return dict(images=image_list, page=page_number, length=page_length)
+
+
+@view_config(route_name="image_submit")
+@auth
+def image_submit(request):
+    with transaction.manager:
+        raw = request.POST['image'].file.read()
+        filename = request.POST['image'].filename
+        md5 = hashlib.md5(raw).hexdigest()
+        exists = DBSession.query(Image).filter_by(md5=md5).first()
+        if exists:
+            return HTTPFound('/images')
+
+        image = Image()
+        image.md5 = md5
+        image.image_ext = filename.split('.')[-1]
+        image.image_raw = raw
+        image.image_thumbnail = thumbnail(raw)
+        DBSession.add(image)
+
+        return HTTPFound('/images')
+
+
+@view_config(route_name="resource_img")
+@cache_view(3600*24*365)
+def resource_img(request):
+    url_info = urlparse.urlsplit(request.referrer)
+    if not (url_info.netloc.startswith('127.0.0.1') or
+            url_info.netloc.startswith("localhost") or
+            url_info.netloc.lower().startswith("vincent")):
+        return HTTPNotFound('')
+    with transaction.manager:
+        image_name = request.matchdict['img_name']
+        md5 = image_name.split('.')[0]
+        image = DBSession.query(Image).filter_by(md5=md5).first()
+        if not image:
+            return HTTPNotFound("")
+        if 'raw' in request.params:
+            response = Response(image.image_raw)
+        else:
+            response = Response(image.image_thumbnail)
+        filename = '%s.%s' % (image.md5, image.image_ext)
+        response.content_type = (
+            mimetypes.guess_type(filename[0])[0] or 'image/jpeg'
+        )
+        # response.content_disposition = 'attachment; filename="%s"' % filename
+        response.cache_expires = 3600*24*365
+        return response
+
+
+@view_config(route_name="edit", renderer="templates/edit 2.html")
+@view_config(route_name="add", renderer="templates/edit 2.html")
 @auth
 def edit(request):
     with transaction.manager:
@@ -165,10 +267,10 @@ def edit(request):
 
         if request.POST:
             if not pid:
-                post = Post()
+                post = Post(url_kword=url_kword)
                 DBSession.add(post)
             post.title = post_title
-            post.url_kword = url_kword
+            # post.url_kword = url_kword
             post.summary = summary
             post.content = content
 

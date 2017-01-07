@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
     <title>${title}</title>
-    <!--    <link rel="alternate" type="application/atom+xml" title="Subscribe Feed" href="http://feeds.lepture.com/lepture">-->
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for vincentsfootprint.com" href="/rss" />
     <link rel="stylesheet" href="/static/css/site.css">
     <link rel="stylesheet" href="/static/css/font.css">
     <meta name="description" content="Vincent Wen's footprint">
@@ -21,7 +21,7 @@
             </a>
             <nav id="nav">
                 <a href="/about">${request._(u'About')}</a>
-                <a href="/tags">${request._(u'TAGS')}</a>
+                <a href="/tags">TAGS</a>
             </nav>
         </div>
     </header>
@@ -33,7 +33,7 @@
             <p>
                 © Copyright 2015 - 2016 by Vincent Wen.
                 &nbsp;&nbsp;
-                <a href="/language?lang=zh_CN"
+<a href="/language?lang=zh_CN"
                    style="${'' if request.localizer.locale_name == 'zh_CN' else 'color: #999;'}">中文</a>
                 &nbsp;
                 <a href="/language?lang=en"

@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit page</title>
+    <link rel="stylesheet" href="/static/foundation/css/foundation.css">
+    <link rel="stylesheet" href="/static/foundation/css/app.css">
+    <style>
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #f9f9f9;
+            margin-bottom: 20px;
+        }
+        
+        header a {
+            color: #444;
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 30px;
+            transition: all .25s ease-in;
+            text-transform: uppercase;
+        }
+        
+        input[type=text] {
+            height: 26px !important;
+        }
+        
+        #footer {
+            padding: 20px 0 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        iframe {
+            height: 125px;
+            border: 0;
+            margin-bottom: 1rem;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header class="row">
+        <div class="columns large-2">&nbsp;</div>
+        <div class="columns large-8">
+            <a id="brand" href="/">
+                <strong>Vincent Wen's footprint</strong>
+            </a>
+        </div>
+        <div class="columns large-2">&nbsp;</div>
+    </header>
+
+    <form action="${request.path}" method="POST">
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <div class="large-8 columns">
+            <label>
+                Title
+                <input type="text" name="title" value="${post.title if post.title else ''}"/>
+            </label>
+        </div>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <div class="large-8 columns">
+            <label>
+                Url Keywords
+            %if post.url_kword:
+                <input name="url_kword" value="${post.url_kword}" type="hidden"/>
+                <input type="text" disabled value="${post.url_kword}" placeholder="url_kword"/>
+            %else:
+                <input type="text" name="url_kword" value="" placeholder="url_kword"/>
+            %endif
+            </label>
+        </div>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <div class="large-8 columns">
+            <label>
+                Tags
+                <input type="text" name="tags" value="${tags}" placeholder="tags"/>
+            </label>
+        </div>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <div class="large-8 columns">
+            <label>
+                Summary
+                <input type="text" name="summary" value="${post.summary if post.summary else ''}" placeholder="summary"/>
+            </label>
+        </div>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <iframe class="large-8 columns" src="/images"></iframe>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-2 columns">&nbsp;</div>
+        <div class="large-8 columns">
+            <label>
+                Content
+                <textarea name="content" rows="25">${post.content if post.content else ''}</textarea>
+            </label>
+        </div>
+        <div class="large-2 columns">&nbsp;</div>
+    </div>
+
+    <div class="row">
+        <div class="large-4 columns">&nbsp;</div>
+        <div class="large-4 columns">
+            <input type="submit" class="button primary small expanded" value="SUBMIT">
+        </div>
+        <div class="large-4 columns">&nbsp;</div>
+    </div>
+    </form>
+
+    <center class="row">
+        <ul class="pagination" role="navigation" aria-label="Pagination">
+            %if post_prev:
+            <li class="pagination-previous">
+                <a href="/edit/${post_prev.id}">${post_prev.title} <span class="show-for-sr">page</span></a>
+            </li>
+            %else:
+                <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
+            %endif
+
+            <li class="current">&nbsp;</li>
+
+            %if post_next:
+            <li class="pagination-next">
+                <a href="/edit/${post_next.id}" aria-label="Next post">
+                    ${post_next.title}
+                    <span class="show-for-sr">page</span>
+                </a>
+            </li>
+            %else:
+            <li class="pagination-next"><a href="/edit" aria-label="Create New">
+                Create New
+                <span class="show-for-sr">page</span></a></li>
+            %endif
+        </ul>
+    </center>
+
+
+    <center id="footer">
+        <p>
+            © Copyright 2015 - 2016 by Vincent Wen.
+        </p>
+    </center>
+
+    <script src="/static/foundation/js/vendor/jquery.js"></script>
+    <script src="/static/foundation/js/vendor/what-input.js"></script>
+    <script src="/static/foundation/js/vendor/foundation.js"></script>
+    <script src="/static/foundation/js/app.js"></script>
+</body>
+
+</html>
