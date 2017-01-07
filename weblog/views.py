@@ -44,7 +44,7 @@ def home(request):
         posts = posts.limit(pagi.num_per_page)
 
         context = {
-            'posts': posts, 'title': u"Vincent's footprint", 'pagi': pagi,
+            'posts': posts, 'title': u"VINCENT'S FOOTPRINT", 'pagi': pagi,
             'request': request
         }
         return render_to_response("templates/home.html", context)
