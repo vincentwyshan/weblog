@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-01-04 23:14+0800\n"
+"POT-Creation-Date: 2017-01-08 00:26+0800\n"
 "PO-Revision-Date: 2017-01-04 23:14+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,9 +17,37 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: weblog/templates/base.html:24
+#: build/lib/weblog/templates/base.html:24 weblog/templates/base.html:24
 msgid "About"
 msgstr "关于"
+
+#: weblog/templates/about.html:9
+msgid "关于我"
+msgstr ""
+
+#: weblog/templates/about.html:16
+msgid ""
+"程序员，工作十余年，在数据库、Python、前端开发等领域有一些经验，热爱开源，算"
+"得上半个全栈工程师。"
+msgstr ""
+
+#: weblog/templates/about.html:17
+msgid ""
+"大部分时间主要和金融数据、金融软件打交道，开发数据处理、服务端、WEB前端、移动"
+"端软件，熟悉国内的主要金融数据供应商。"
+msgstr ""
+
+#: weblog/templates/about.html:20
+msgid "我的资源"
+msgstr ""
+
+#: weblog/templates/about.html:23
+msgid "微博"
+msgstr ""
+
+#: weblog/templates/about.html:24
+msgid "联系我"
+msgstr ""
 
 #: weblog/templates/base.html:25
 msgid "TAGS"
