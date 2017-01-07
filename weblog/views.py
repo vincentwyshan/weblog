@@ -21,7 +21,7 @@ import PyRSS2Gen
 
 from weblog.security import auth
 from weblog.cache import cache_view
-from weblog.common import thumbnail
+from weblog.common import thumbnail, _, _t
 from weblog.models import (
     DBSession,
     Post, Tag, rel_post_tag, Image
@@ -120,7 +120,9 @@ def tags_detail(request):
 @view_config(route_name="about")
 @cache_view(60)
 def about(request):
-    context = dict(title="About | VINCENT'S FOOTPRINT", request=request)
+    _about = _t(request, _(u"About"))
+    context = dict(title=_about + u" | VINCENT'S FOOTPRINT",
+                   request=request)
     return render_to_response("templates/about.html", context)
 
 

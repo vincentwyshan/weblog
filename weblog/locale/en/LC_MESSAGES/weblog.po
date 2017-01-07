@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-01-08 00:26+0800\n"
+"POT-Creation-Date: 2017-01-08 00:44+0800\n"
 "PO-Revision-Date: 2017-01-08 00:39+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,7 +17,8 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: build/lib/weblog/templates/base.html:24 weblog/templates/base.html:24
+#: build/lib/weblog/templates/base.html:24 weblog/views.py:123
+#: weblog/templates/base.html:24
 msgid "About"
 msgstr ""
 
@@ -27,21 +28,21 @@ msgstr "Vincent Wen"
 
 #: weblog/templates/about.html:16
 msgid ""
-"程序员，工作十余年，在数据库、Python、前端开发等领域有一些经验，热爱开"
-"源，算得上半个全栈工程师。"
+"程序员，工作十余年，在数据库、Python、前端开发等领域有一些经验，热爱开源，算"
+"得上半个全栈工程师。"
 msgstr ""
-"My name is Vincent Wen, I have been a passionate developer for ten "
-"years, have experiences in database, Python, front end development, "
-"love open source."
+"My name is Vincent Wen, I have been a passionate developer for ten years, "
+"have experiences in database, Python, front end development, love open "
+"source."
 
 #: weblog/templates/about.html:17
 msgid ""
-"大部分时间主要和金融数据、金融软件打交道，开发数据处理、服务端、WEB前"
-"端、移动端软件，熟悉国内的主要金融数据供应商。"
+"大部分时间主要和金融数据、金融软件打交道，开发数据处理、服务端、WEB前端、移动"
+"端软件，熟悉国内的主要金融数据供应商。"
 msgstr ""
-"I develop financial softwares and financial data programs, including "
-"ETL scripts, server side softwares, web tools, mobile softwares, I’m "
-"familiar with China and Hong Kong markets."
+"I develop financial softwares and financial data programs, including ETL "
+"scripts, server side softwares, web tools, mobile softwares, I’m familiar "
+"with China and Hong Kong markets."
 
 #: weblog/templates/about.html:20
 msgid "我的资源"
