@@ -1,2 +1,3 @@
 include *.txt *.ini *.cfg *.rst *.po *.pot *.mo
 recursive-include weblog *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include weblog/locale *.po *.pot *.mo
