@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-01-08 00:44+0800\n"
+"POT-Creation-Date: 2017-01-08 00:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,4 +47,16 @@ msgstr ""
 
 #: ././weblog/templates/base.html:25
 msgid "TAGS"
+msgstr ""
+
+#: ././weblog/templates/tags.html:8
+msgid "Tags"
+msgstr ""
+
+#: ././weblog/templates/tags_detail.html:7
+msgid "entries in the"
+msgstr ""
+
+#: ././weblog/templates/tags_detail.html:8
+msgid "category"
 msgstr ""
