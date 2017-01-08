@@ -3,7 +3,6 @@
 import urllib
 import hashlib
 import mimetypes
-import urlparse
 import datetime
 import StringIO
 
@@ -196,11 +195,6 @@ def image_submit(request):
 @view_config(route_name="resource_img")
 @cache_view(3600*24*365)
 def resource_img(request):
-    url_info = urlparse.urlsplit(request.referrer)
-    if not (url_info.netloc.startswith('127.0.0.1') or
-            url_info.netloc.startswith("localhost") or
-            url_info.netloc.lower().startswith("vincent")):
-        return HTTPNotFound('')
     with transaction.manager:
         image_name = request.matchdict['img_name']
         md5 = image_name.split('.')[0]
