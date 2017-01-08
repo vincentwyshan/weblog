@@ -32,7 +32,7 @@ class CustomCommand(distutils.cmd.Command):
     Customize commands for setup scripts.
     """
 
-    description = 'Tap commands'
+    description = 'Custom commands'
     user_options = [
         # The format is (long option, short option, description).
         ('action=', 'a', 'Specify the action: [extract_i18n]'),
