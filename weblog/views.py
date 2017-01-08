@@ -6,7 +6,6 @@ import hashlib
 import mimetypes
 import datetime
 import StringIO
-import cPickle
 
 import transaction
 from pyramid.response import Response
