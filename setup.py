@@ -73,7 +73,7 @@ class CustomCommand(distutils.cmd.Command):
 
 
 setup(name='weblog',
-      version='0.1',
+      version='0.2',
       description='weblog',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
