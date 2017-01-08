@@ -9,6 +9,9 @@ import time
 _ROOTDIR = "/tmp/weblog"
 if not os.path.exists(_ROOTDIR):
     os.makedirs(_ROOTDIR)
+_IMAGE_DIR = "/tmp/weblog/images"
+if not os.path.exists(_IMAGE_DIR):
+    os.makedirs(_IMAGE_DIR)
 
 
 def cache_view(timeout):

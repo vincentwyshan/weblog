@@ -1,10 +1,12 @@
 #coding=utf8
 
+import os
 import urllib
 import hashlib
 import mimetypes
 import datetime
 import StringIO
+import cPickle
 
 import transaction
 from pyramid.response import Response
@@ -19,7 +21,7 @@ from pyramid.renderers import render_to_response
 import PyRSS2Gen
 
 from weblog.security import auth
-from weblog.cache import cache_view
+from weblog.cache import cache_view, _IMAGE_DIR
 from weblog.common import thumbnail, _, _t
 from weblog.models import (
     DBSession,
@@ -75,44 +77,46 @@ def post(request):
 @view_config(route_name="tags")
 @cache_view(60)
 def tags(request):
-    _tags = list(DBSession.query(Tag))
-    _tags = {
-        t.name: DBSession.query(rel_post_tag).filter_by(tag_id=t.id).count()
-        for t in _tags
-    }
-    _tags = {
-        name: value for name, value in _tags.items() if value > 0
-    }
+    with transaction.manager:
+        _tags = list(DBSession.query(Tag))
+        _tags = {
+            t.name: DBSession.query(rel_post_tag).filter_by(tag_id=t.id).count()
+            for t in _tags
+        }
+        _tags = {
+            name: value for name, value in _tags.items() if value > 0
+        }
 
-    max_num = max(_tags.values())
-    min_num = min(_tags.values())
-    distance = max_num - min_num
-    distance = 10 if distance < 10 else distance
-    for name, val in _tags.items():
-        if distance == 0:
-            _tags[name] = 1
-            continue
-        _tags[name] = 1 + ((val - min_num)*1.0 / distance)
+        max_num = max(_tags.values())
+        min_num = min(_tags.values())
+        distance = max_num - min_num
+        distance = 10 if distance < 10 else distance
+        for name, val in _tags.items():
+            if distance == 0:
+                _tags[name] = 1
+                continue
+            _tags[name] = 1 + ((val - min_num)*1.0 / distance)
 
-    context = {
-        'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT",
-        'request': request
-    }
+        context = {
+            'tags': _tags, 'title': u"Tags | VINCNET'S FOOTPRINT",
+            'request': request
+        }
     return render_to_response("templates/tags.html", context)
 
 
 @view_config(route_name="tag_posts")
 @cache_view(60)
 def tags_detail(request):
-    tag_name = request.matchdict['name'].strip()
-    tag = DBSession.query(Tag).filter_by(name=tag_name).first()
-    if not tag:
-        return HTTPNotFound("")
+    with transaction.manager:
+        tag_name = request.matchdict['name'].strip()
+        tag = DBSession.query(Tag).filter_by(name=tag_name).first()
+        if not tag:
+            return HTTPNotFound("")
 
-    posts = list(tag.posts)
-    del posts
+        posts = list(tag.posts)
+        del posts
 
-    context = {'tag': tag, 'title': u"Tag: %s" % tag.name, 'request': request}
+        context = {'tag': tag, 'title': u"Tag: %s" % tag.name, 'request': request}
     return render_to_response("templates/tags_detail.html", context)
 
 
@@ -126,6 +130,7 @@ def about(request):
 
 
 @view_config(route_name="rss")
+@cache_view(60)
 def rss(request):
     with transaction.manager:
         host = request.host
@@ -139,9 +144,9 @@ def rss(request):
                              )
         f = StringIO.StringIO()
         rss.write_xml(f, encoding='utf8')
-        response = Response(f.getvalue())
-        response.content_type = "application/rss+xml"
-        return response
+    response = Response(f.getvalue())
+    response.content_type = "application/rss+xml"
+    return response
 
 
 def rss_item(host, post):
@@ -193,25 +198,39 @@ def image_submit(request):
 
 
 @view_config(route_name="resource_img")
-@cache_view(3600*24*365)
 def resource_img(request):
-    with transaction.manager:
-        image_name = request.matchdict['img_name']
-        md5 = image_name.split('.')[0]
-        image = DBSession.query(Image).filter_by(md5=md5).first()
-        if not image:
-            return HTTPNotFound("")
-        if 'raw' in request.params:
-            response = Response(image.image_raw)
-        else:
-            response = Response(image.image_thumbnail)
-        filename = '%s.%s' % (image.md5, image.image_ext)
-        response.content_type = (
-            mimetypes.guess_type(filename[0])[0] or 'image/jpeg'
-        )
-        # response.content_disposition = 'attachment; filename="%s"' % filename
-        response.cache_expires = 3600*24*365
-        return response
+    image_name = request.matchdict['img_name']
+    md5 = image_name.split('.')[0]
+    file_type = 'thumbnail'
+    if 'raw' in request.params:
+        file_type = 'raw'
+
+    # cache
+    cache_path = os.path.join(_IMAGE_DIR, md5)
+    cache_path = (
+        cache_path if file_type == 'raw' else (cache_path + '.thumbnail')
+    )
+    if os.path.exists(cache_path):
+        data = open(cache_path, 'rb').read()
+        filename, data = data.split('|||||')
+    else:
+        with transaction.manager:
+            image = DBSession.query(Image).filter_by(md5=md5).first()
+            if not image:
+                return HTTPNotFound("")
+            data = (
+                image.image_raw if file_type == 'raw' else image.image_thumbnail
+            )
+            filename = '%s.%s' % (image.md5, image.image_ext)
+            data = str(filename) + '|||||' + data
+            open(cache_path, 'wb').write(data)
+    response = Response(data)
+    response.content_type = (
+        mimetypes.guess_type(filename[0])[0] or 'image/jpeg'
+    )
+    # response.content_disposition = 'attachment; filename="%s"' % filename
+    response.cache_expires = 3600*24*365
+    return response
 
 
 @view_config(route_name="edit", renderer="templates/edit 2.html")
