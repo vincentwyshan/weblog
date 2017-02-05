@@ -6,10 +6,10 @@ import cPickle
 import time
 
 
-_ROOTDIR = "/home/weblogcache"
+_ROOTDIR = os.environ.get("WEBLOG_CACHE_DIR", "/tmp/weblogcache")
 if not os.path.exists(_ROOTDIR):
     os.makedirs(_ROOTDIR)
-_IMAGE_DIR = "/home/weblogcache/images"
+_IMAGE_DIR = os.path.join(_ROOTDIR, "images")
 if not os.path.exists(_IMAGE_DIR):
     os.makedirs(_IMAGE_DIR)
 
