@@ -43,3 +43,26 @@ a:hover{border-color:#444}#nav{float:right}#nav a{font-size:16px;margin-right:15
     font-size: 0.8em;
     background-color: #fff;
 }
+.yue {
+    color: #3A4145;
+}
+.yue h1, .yue h2, .yue h3, .yue h4, .yue h5, .yue h6{
+    color: #2E2E2E;
+}
+.yue a{
+    color: #4A4A4A;
+}
+@media (max-width: 650px){
+    #brand>img {
+        height: 31px;
+        margin: 0;
+    }
+    #brand {
+        height: 31px;
+    }
+}
+@media (min-width: 650px){
+    #brand>img {
+        display: none;
+    }
+}
