@@ -319,7 +319,14 @@ def edit(request):
 @view_config(route_name='language')
 def language(request):
     lang = request.params.get('lang')
-    response = HTTPFound(request.referrer or '/')
+    next_url = request.referrer or '/'
+    if next_url != '/' and request.host not in next_url:
+        site_address = request.registry.settings.get('site_address', '/')
+        if site_address == '/':
+            next_url = request.host
+        else:
+            next_url = site_address
+    response = HTTPFound(next_url)
     if lang == 'zh_CN':
         response.set_cookie('_LOCALE_', 'zh_CN', max_age=3600*24*365)
     else:
