@@ -6,6 +6,7 @@ import hashlib
 import mimetypes
 import datetime
 import StringIO
+import shutil
 
 import transaction
 from pyramid.response import Response
@@ -20,7 +21,7 @@ from pyramid.renderers import render_to_response
 import PyRSS2Gen
 
 from weblog.security import auth
-from weblog.cache import cache_view, _IMAGE_DIR
+from weblog.cache import cache_view, _IMAGE_DIR, _ROOTDIR
 from weblog.common import thumbnail, _, _t
 from weblog.models import (
     DBSession,
@@ -313,6 +314,9 @@ def edit(request):
 
         tags = u','.join([t.name for t in post.tags])
         post_prev, post_next = get_navigator()
+
+        # delete cache
+        shutil.rmtree(_ROOTDIR)
         return locals()
 
 
