@@ -317,6 +317,7 @@ def edit(request):
 
         # delete cache
         shutil.rmtree(_ROOTDIR)
+        os.makedirs(_ROOTDIR)
         return locals()
 
 
