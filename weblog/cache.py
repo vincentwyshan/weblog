@@ -18,7 +18,7 @@ def cache_view(timeout):
     def call(func):
         def wraper(*karg, **kwargs):
             request = karg[1]
-            if request.registry.settings.USER_NAME == 'test':
+            if request.registry.settings['USER_NAME'] == 'test':
                 return func(request)
             path = request.path
             locale_name = (request.localizer.locale_name or '');
