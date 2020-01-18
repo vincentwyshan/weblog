@@ -1,0 +1,4 @@
+Generic single-database configuration.
+
+alembic -c alembic.ini revision --autogenerate
+alembic -c alembic.ini upgrade head

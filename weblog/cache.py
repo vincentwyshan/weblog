@@ -2,7 +2,7 @@
 
 import os
 import hashlib
-import cPickle
+import pickle
 import time
 
 
@@ -18,19 +18,21 @@ def cache_view(timeout):
     def call(func):
         def wraper(*karg, **kwargs):
             request = karg[1]
-            if request.registry.settings['USER_NAME'] == 'test':
+            if request.registry.settings["USER_NAME"] == "test":
                 return func(request)
             path = request.path
-            locale_name = (request.localizer.locale_name or '');
+            locale_name = request.localizer.locale_name or ""
             key = hashlib.md5(path + locale_name).hexdigest()
             path = os.path.join(_ROOTDIR, key)
             if os.path.exists(path) and check_mtime(path, timeout):
-                return cPickle.load(open(path, 'rb'))
+                return pickle.load(open(path, "rb"))
             else:
                 result = func(request)
-                cPickle.dump(result, open(path, 'wb'))
+                pickle.dump(result, open(path, "wb"))
                 return result
+
         return wraper
+
     return call
 
 

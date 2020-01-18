@@ -1,13 +1,13 @@
 # coding=utf8
 
 import os
-from StringIO import StringIO
+from io import StringIO
 
 from PIL import Image
 from pyramid.i18n import TranslationStringFactory
 
 
-_ = TranslationStringFactory('weblog')
+_ = TranslationStringFactory("weblog")
 
 
 def _t(request, trans):
@@ -31,6 +31,6 @@ def thumbnail(raw, max_size=800):
 
 
 def test(path):
-    raw = open(path, 'rb').read()
+    raw = open(path, "rb").read()
     path, ext = os.path.splitext(path)
-    open(path + '.thumbnail' + ext, 'wb').write(thumbnail(raw))
+    open(path + ".thumbnail" + ext, "wb").write(thumbnail(raw))
