@@ -20,10 +20,14 @@ def cache_view(timeout):
             request = karg[1]
             if request.registry.settings["USER_NAME"] == "test":
                 return func(request)
+
             path = request.path
             locale_name = request.localizer.locale_name or ""
-            key = hashlib.md5(path + locale_name).hexdigest()
+            key = path + locale_name
+            key = key.encode("utf-8") if isinstance(key, str) else key
+            key = hashlib.md5(key).hexdigest()
             path = os.path.join(_ROOTDIR, key)
+
             if os.path.exists(path) and check_mtime(path, timeout):
                 return pickle.load(open(path, "rb"))
             else:
