@@ -9,7 +9,7 @@
 import re
 import os
 import datetime
-import pickle
+import logging
 from typing import Dict
 
 import click
@@ -40,6 +40,8 @@ from ..database import (
     Tag,
 )
 
+log: logging.Logger = None
+
 
 @click.command(
     __name__, context_settings=dict(help_option_names=["-h", "--help"])
@@ -49,6 +51,10 @@ from ..database import (
 )
 def main(config):
     setup_logging(config)
+    global log
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
+
     settings = get_appsettings(config_uri=config, options={})
 
     engine = get_engine(settings, "sqlalchemy.")
@@ -97,24 +103,33 @@ def process_images(posts_root):
             os.makedirs(_d)
 
     for root, dirs, files in os.walk(static_dir):
-        os.makedirs(root, exist_ok=True)
         for f in files:
+            if f.startswith("."):
+                continue
+
             path = os.path.join(root, f)
             path_desktop = path.replace(static_dir, static_desktop)
-            if os.path.isdir(path_desktop) and get_mtime(path) <= get_mtime(
+            if os.path.isfile(path_desktop) and get_mtime(path) <= get_mtime(
                 path_desktop
             ):
                 continue
 
+            log.info("process image: {}".format(path))
             raw = open(path, "rb").read()
             blob = thumbnail(raw, img_static.desktop_width)
+            if not os.path.isdir(os.path.split(path_desktop)[0]):
+                os.makedirs(os.path.split(path_desktop)[0])
             open(path_desktop, "wb").write(blob)
 
+            path_mobile = path.replace(static_dir, static_mobile)
+            if not os.path.isdir(os.path.split(path_mobile)[0]):
+                os.makedirs(os.path.split(path_mobile)[0])
             blob = thumbnail(raw, img_static.mobile_width)
-            open(path.replace(static_dir, static_mobile), "wb").write(blob)
+            open(path_mobile, "wb").write(blob)
 
 
 def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
+    log.info("load yml: {}".format(index_yml))
     data = load_yml(open(index_yml, "r"), Loader=Loader)
     post_ids = set()
     tag_ids = set()
@@ -124,36 +139,27 @@ def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
         summary = text_to_html(attrs["summary"])
         tags = [t.strip() for t in attrs["tags"].split(",") if t.strip()]
         created_time = attrs["created"]
-        if not isinstance(created_time, datetime.datetime):
+        if not isinstance(created_time, (datetime.datetime, datetime.date)):
             created_time = date_parse(created_time)
-        created_time = created_time.replace(tzinfo=None)
+        if isinstance(created_time, datetime.datetime):
+            created_time = created_time.replace(tzinfo=None)
 
-        post_file = post_files[url_kw.lower()]
-        file_content = open(post_file, "r").read()
-        if post_file.lower().endswith("rst"):
-            file_content = re.sub(
-                r"[\.\/]*\/static\/", r"/post-static/", file_content
-            )
-            parts = publish_parts(file_content, writer_name="html")
-            content = parts["body"]
-        elif post_file.lower().endswith("txt"):
-            content = text_to_html(file_content)
-        else:
-            raise NotImplementedError(
-                "can't support format: {}".format(post_file)
-            )
 
         post = session.query(Post).filter(Post.url_kword == url_kw).first()
         if not post:
             post = Post(url_kword=url_kw)
             session.add(post)
 
+        if post.url_kword != url_kw:
+            post.url_kword = url_kw
         if post.title != title:
             post.title = title
         if post.summary != summary:
             post.summary = summary
         if post.created != created_time:
             post.created = created_time
+
+        content = load_post_content(post_files, url_kw)
         if post.content != content:
             post.content = content
 
@@ -173,6 +179,24 @@ def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
             tag_ids.update([t.id for t in post.tags])
 
     return post_ids, tag_ids
+
+
+def load_post_content(post_files, url_kw):
+    post_file = post_files[url_kw.lower()]
+    file_content = open(post_file, "r").read()
+    if post_file.lower().endswith("rst"):
+        file_content = re.sub(
+            r"[\.\/]*\/static\/", r"/post-static/", file_content
+        )
+        parts = publish_parts(file_content, writer_name="html")
+        content = parts["body"]
+    elif post_file.lower().endswith("txt"):
+        content = text_to_html(file_content)
+    else:
+        raise NotImplementedError(
+            "can't support format: {}".format(post_file)
+        )
+    return content
 
 
 def text_to_html(content):
