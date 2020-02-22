@@ -9,11 +9,12 @@ def includeme(config):
     config.add_route("language", "/language")
     config.add_route("rss", "/rss")
 
-    config.add_route("images", "/images")
-    config.add_route("image_submit", "/image-submit")
+    config.add_route("post_static", "/post-static/{path}")
 
+    # todo remove
     config.add_route("resource_img", "/resource/image/{img_name}")
 
+    config.add_route("images", "/images")
+    config.add_route("image_submit", "/image-submit")
     config.add_route("add", "/edit")
     config.add_route("edit", "/edit/{post_id}")
-

@@ -25,6 +25,9 @@ requires = [
     "pillow",
     "pyrss2gen",
     "alembic",
+    "pyyaml",
+    "click",
+    "python-dateutil",
 ]
 
 
@@ -80,7 +83,7 @@ class CustomCommand(distutils.cmd.Command):
 
 setup(
     name="weblog",
-    version="0.2",
+    version="0.3.1",
     description="weblog",
     long_description=README + "\n\n" + CHANGES,
     classifiers=[
@@ -102,7 +105,8 @@ setup(
       [paste.app_factory]
       main = weblog:main
       [console_scripts]
-      initialize_weblog_db = weblog.scripts.initializedb:main
+      weblog_initdb = weblog.scripts.initializedb:main
+      weblog_load_posts = weblog.scripts.load_posts:main
       """,
     cmdclass={"weblog": CustomCommand},
 )

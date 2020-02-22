@@ -1,6 +1,7 @@
 import datetime
 
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint
 from sqlalchemy import (
     Column,
     Index,
@@ -34,6 +35,7 @@ rel_post_tag = Table(
     Base.metadata,
     Column("post_id", Integer, ForeignKey("t_post.id")),
     Column("tag_id", Integer, ForeignKey("t_tag.id")),
+    UniqueConstraint("post_id", "tag_id", name="uk_r_post_tag"),
 )
 
 

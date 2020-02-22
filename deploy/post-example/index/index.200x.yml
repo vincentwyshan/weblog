@@ -1,0 +1,11 @@
+post-example-1:
+  title: The Very First Post
+  summary: This is your first post's summary
+  tags: TagTest1, TagTest2
+  created: 2000-02-17 21:12:37.163271+08:00
+
+example-2-hello-world:
+  title: Hello World
+  summary: This is your second post's summary
+  tags: foo, TagTest1
+  created: 2001-02-17 21:12:37.163271+08:00

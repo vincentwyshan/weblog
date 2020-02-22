@@ -1,8 +1,6 @@
 import os
-import hashlib
 import mimetypes
 import datetime
-import shutil
 import pickle
 from typing import Dict
 from io import StringIO
@@ -13,15 +11,12 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 
 from sqlalchemy import desc
-from sqlalchemy import func
-from docutils.core import publish_parts
 
 from pyramid.renderers import render_to_response
 import PyRSS2Gen
 
-from weblog.security import auth
-from weblog.cache import cache_view, _IMAGE_DIR, _ROOTDIR
-from weblog.common import thumbnail, _, _t
+from weblog.cache import cache_view, _IMAGE_DIR
+from weblog.common import _, _t, img_static
 from weblog.database.models import Post, Tag, rel_post_tag, Image
 
 
@@ -29,9 +24,9 @@ from weblog.database.models import Post, Tag, rel_post_tag, Image
 @cache_view(60)
 def home(request):
     posts = request.dbsession.query(Post)
+    total = posts.count()
 
     current = int(request.params.get("p", 1))
-    total = posts.count()
     num_per_page = 15
     pagi = Paginator(current, total, num_per_page, p_argname="p")
 
@@ -61,13 +56,13 @@ def post(request):
 
     tags = post.tags
     del tags
-    parts = publish_parts(post.content, writer_name="html")
-    html_body = parts["body"]
+    # parts = publish_parts(post.content, writer_name="html")
+    # html_body = parts["body"]
 
     context = {
         "post": post,
         "title": post.title,
-        "post_content": html_body,
+        "post_content": post.content,
         "request": request,
     }
     return render_to_response("post.html", context)
@@ -149,48 +144,39 @@ def rss(request):
 
 def rss_item(host, post):
     pubdate = post.created
-    html = publish_parts(post.content, writer_name="html")["html_body"]
+    # html = publish_parts(post.content, writer_name="html")["html_body"]
     link = "http://%s/post/%s" % (host, post.url_kword)
     return PyRSS2Gen.RSSItem(
         title=post.title,
         link=link,
-        description=html,
+        description=post.summary,
         guid=link,  # PyRSS2Gen.Guid("http://%s/%s"%(host,str(post.timestamp)))
         pubDate=pubdate,
     )
 
 
-@view_config(route_name="images", renderer="images.html")
-@auth
-def images(request):
-    page_number = int(request.params.get("page", 1))
-    page_length = 5
-    image_list = request.dbsession.query(Image).order_by(Image.id.desc())
-    image_list = image_list.offset((page_number - 1) * page_length)
-    image_list = image_list.limit(page_length)
-    image_list = list(image_list)
-    image_list.reverse()
-    return dict(images=image_list, page=page_number, length=page_length)
+@view_config(route_name="post_static")
+def post_static(request):
+    path = request.matchdict["path"]
+    posts_root = request.registry.settings["posts_root"]
 
+    if "mobile" in request.params:
+        data = open(
+            os.path.join(posts_root, img_static.desktop_dir, path), "rb"
+        ).read()
+    elif "raw" in request.params:
+        data = open(
+            os.path.join(posts_root, img_static.raw, path), "rb"
+        ).read()
+    else:
+        data = open(
+            os.path.join(posts_root, img_static.desktop_dir, path), "rb"
+        ).read()
 
-@view_config(route_name="image_submit")
-@auth
-def image_submit(request):
-    raw = request.POST["image"].file.read()
-    filename = request.POST["image"].filename
-    md5 = hashlib.md5(raw).hexdigest()
-    exists = request.dbsession.query(Image).filter_by(md5=md5).first()
-    if exists:
-        return HTTPFound("/images")
-
-    image = Image()
-    image.md5 = md5
-    image.image_ext = filename.split(".")[-1]
-    image.image_raw = raw
-    image.image_thumbnail = thumbnail(raw)
-    request.dbsession.add(image)
-
-    return HTTPFound("/images")
+    response = Response(data)
+    response.content_type = mimetypes.guess_type(path)[0] or "image/jpeg"
+    response.cache_expires = 3600 * 24 * 365
+    return response
 
 
 @view_config(route_name="resource_img")
@@ -239,107 +225,6 @@ def resource_img(request):
     # response.content_disposition = 'attachment; filename="%s"' % filename
     response.cache_expires = 3600 * 24 * 365
     return response
-
-
-@view_config(route_name="edit", renderer="edit 2.html")
-@view_config(route_name="add", renderer="edit 2.html")
-@auth
-def edit(request):
-    dbsession = request.dbsession
-
-    pid = request.matchdict.get("post_id")
-    post_title = request.params.get("title")
-    url_kword = request.params.get("url_kword")
-    tags = request.params.get("tags", "")
-    summary = request.params.get("summary", "")
-    content = request.params.get("content", "")
-
-    # navigator
-    def get_navigator():
-        post_prev, post_next = None, None
-        if pid:
-            post_next = dbsession.query(Post).get(int(pid) + 1)
-            post_prev = dbsession.query(Post).get(int(pid) - 1)
-        else:
-            result = dbsession.query(func.max(Post.id).label("id")).first()
-            if result:
-                max_id = result.id
-                post_prev = dbsession.query(Post).get(max_id)
-        return post_prev, post_next
-
-    title = u"$$_CREATE NEW_$$"
-
-    # check data:
-    error_msg = ""
-    if request.POST:
-        try:
-            assert post_title not in ("", None), "title"
-            assert url_kword not in ("", None), "url_keyword"
-            assert summary not in ("", None), "summary"
-            assert content not in ("", None), "content"
-        except Exception as e:
-            error_msg = u"error: missing value for %s" % str(e)
-            post = Temp(
-                id=pid,
-                title=post_title,
-                url_kword=url_kword,
-                summary=summary,
-                content=content,
-            )
-            post_prev, post_next = get_navigator()
-            return locals()
-
-    post = None
-    if pid:
-        post = dbsession.query(Post).get(pid)
-        title = u"Edit %s" % post.title
-
-    if request.POST:
-        if not pid:
-            post = Post(url_kword=url_kword)
-            dbsession.add(post)
-        post.title = post_title
-        # post.url_kword = url_kword
-        post.summary = summary
-        post.content = content
-
-        new_tags = []
-        for name in tags.split(","):
-            name = name.strip()
-            if not name:
-                continue
-            tag = dbsession.query(Tag).filter_by(name=name).first()
-            if not tag:
-                tag = Tag(name=name)
-                dbsession.add(tag)
-            new_tags.append(tag)
-        for tag in list(post.tags):
-            post.tags.remove(tag)
-        for tag in new_tags:
-            post.tags.append(tag)
-        dbsession.flush()
-        return HTTPFound("/edit/%s" % post.id)
-
-    if not post:
-        post = Temp(
-            id=pid,
-            title=post_title,
-            url_kword=url_kword,
-            summary=summary,
-            content=content,
-            tags=tags,
-        )
-        post_prev, post_next = get_navigator()
-        return locals()
-
-    tags = u",".join([t.name for t in post.tags])
-    post_prev, post_next = get_navigator()
-
-    # delete cache
-    shutil.rmtree(_ROOTDIR)
-    os.makedirs(_ROOTDIR)
-    os.makedirs(_IMAGE_DIR)
-    return locals()
 
 
 @view_config(route_name="language")

@@ -4,7 +4,6 @@ from sqlalchemy.orm import configure_mappers
 import zope.sqlalchemy
 
 from .models import Post, Tag, Image  # noqa
-from .draft import Draft  # noqa
 from .meta import metadata  # noqa
 
 configure_mappers()

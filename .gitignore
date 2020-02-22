@@ -293,3 +293,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+static-desktop/
+static-mobile/

@@ -1,13 +1,24 @@
-# coding=utf8
-
 import os
-from io import StringIO
+from io import BytesIO
+from collections import namedtuple
 
 from PIL import Image
 from pyramid.i18n import TranslationStringFactory
 
 
 _ = TranslationStringFactory("weblog")
+
+img_static = namedtuple(
+    "img_static",
+    ["raw", "desktop_dir", "desktop_width", "mobile_dir", "mobile_width"],
+)
+img_static = img_static(
+    raw="static",
+    desktop_dir="static-desktop",
+    desktop_width=780,
+    mobile_dir="static-mobile",
+    mobile_width=250,
+)
 
 
 def _t(request, trans):
@@ -22,10 +33,10 @@ def thumbnail(raw, max_size=800):
     :return:
     """
     size = (max_size, max_size)
-    raw = StringIO(raw)
+    raw = BytesIO(raw)
     im = Image.open(raw)
     im.thumbnail(size, Image.ANTIALIAS)
-    out = StringIO()
+    out = BytesIO()
     im.save(out, "JPEG")
     return out.getvalue()
 
