@@ -9,7 +9,7 @@ def includeme(config):
     config.add_route("language", "/language")
     config.add_route("rss", "/rss")
 
-    config.add_route("post_static", "/post-static/{path}")
+    config.add_route("post_static", "/post-static/{path:.*}")
 
     # todo remove
     config.add_route("resource_img", "/resource/image/{img_name}")
