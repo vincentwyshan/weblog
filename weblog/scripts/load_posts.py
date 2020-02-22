@@ -130,7 +130,7 @@ def process_images(posts_root):
 
 def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
     log.info("load yml: {}".format(index_yml))
-    data = load_yml(open(index_yml, "r"), Loader=Loader)
+    data = load_yml(open(index_yml, "r"), Loader=Loader) or {}
     post_ids = set()
     tag_ids = set()
 
