@@ -137,13 +137,14 @@ def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
     for url_kw, attrs in data.items():
         title = attrs["title"]
         summary = text_to_html(attrs["summary"])
-        tags = [t.strip() for t in attrs["tags"].split(",") if t.strip()]
+        tags = [
+            t.strip() for t in (attrs["tags"] or "").split(",") if t.strip()
+        ]
         created_time = attrs["created"]
         if not isinstance(created_time, (datetime.datetime, datetime.date)):
             created_time = date_parse(created_time)
         if isinstance(created_time, datetime.datetime):
             created_time = created_time.replace(tzinfo=None)
-
 
         post = session.query(Post).filter(Post.url_kword == url_kw).first()
         if not post:
@@ -193,9 +194,7 @@ def load_post_content(post_files, url_kw):
     elif post_file.lower().endswith("txt"):
         content = text_to_html(file_content)
     else:
-        raise NotImplementedError(
-            "can't support format: {}".format(post_file)
-        )
+        raise NotImplementedError("can't support format: {}".format(post_file))
     return content
 
 
