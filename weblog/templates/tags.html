@@ -24,7 +24,7 @@
             border-color: #d45e13;
         }
     </style>
-    <ul class="archive-list" role="main">
+    <ul class="archive-list" role="main" style="padding-inline-start:0">
         %for name, value in tags.items():
         <li class="entry-item">
             <a href="/tags/${name | u}" style="font-size: ${value*100.0}%">${name}</a>
