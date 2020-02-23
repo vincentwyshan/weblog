@@ -1,4 +1,5 @@
 import os
+import math
 import mimetypes
 import datetime
 import pickle
@@ -254,9 +255,11 @@ class Temp:
 
 
 class Paginator(object):
-    total = 0
-    num_per_page = 30
-    current = 0
+    _start = 1
+
+    total: int = 0
+    num_per_page: int = 30
+    current: int
     offset = 3
     paras = {}
     p_argname = "page"
@@ -296,10 +299,8 @@ class Paginator(object):
                 assert isinstance(k, str)
                 if not v:
                     self.paras[k] = ""
-                # if isinstance(v, unicode):
-                #     self.paras[k] = v.encode("utf8")
 
-        if self.current > 1:
+        if self.current > self._start:
             self.show_prevbutton = True
         else:
             self.show_prevbutton = False
@@ -309,7 +310,7 @@ class Paginator(object):
         else:
             self.show_nextbutton = False
 
-        if self.prevlist and self.prevlist[0] != 1:
+        if self.prevlist and self.prevlist[0] != self._start:
             self.show_firstpage = True
         else:
             self.show_firstpage = False
@@ -324,7 +325,7 @@ class Paginator(object):
         """total page number."""
         if self._page_total is not None:
             return self._page_total
-        self._page_total = self.total / self.num_per_page
+        self._page_total = math.floor(self.total / self.num_per_page)
         if self.total % self.num_per_page != 0:
             self._page_total += 1
         return self._page_total
@@ -339,7 +340,7 @@ class Paginator(object):
         _prev = self.current
         while len(self._prevlist) < self.offset:
             _prev -= 1
-            if _prev < 1:
+            if _prev < self._start:
                 break
             self._prevlist.insert(0, _prev)
         return self._prevlist
