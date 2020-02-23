@@ -9,15 +9,7 @@
 
             <div class="entry-meta">
                 <time class="updated"> ${post.created.strftime("%b %d, %Y")} </time>
-                <%
-                    tags = list(post.tags)
-                %>
-                %for tag in tags:
-                <a class="tag" href="/tags/${tag.name}">${tag.name}</a>
-                %if tags.index(tag) < (len(tags) - 1):
-                ,
-                %endif
-                %endfor
+                ${', '.join(['<a class="tag" href="/tags/{}">{}</a>'.format(t.name, t.name) for t in post.tags]) | n}
             </div>
         </div>
     </div>
