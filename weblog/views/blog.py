@@ -36,7 +36,7 @@ def home(request):
 
     context = {
         "posts": posts,
-        "title": u"VINCENT'S FOOTPRINT",
+        "title": request.registry.settings["site_name"],
         "pagi": pagi,
         "request": request,
     }
@@ -92,7 +92,7 @@ def tags(request):
 
     context = {
         "tags": _tags,
-        "title": u"Tags | VINCNET'S FOOTPRINT",
+        "title": u"Tags | {}".format(request.registry.settings["site_name"]),
         "request": request,
     }
     return render_to_response("tags.html", context)
@@ -117,7 +117,10 @@ def tags_detail(request):
 @cache_view(60)
 def about(request):
     _about = _t(request, _(u"About"))
-    context = dict(title=_about + u" | VINCENT'S FOOTPRINT", request=request)
+    context = dict(
+        title=_about + u" | {}".format(request.registry.settings["site_name"]),
+        request=request,
+    )
     return render_to_response("about.html", context)
 
 
@@ -128,9 +131,9 @@ def rss(request):
     posts = request.dbsession.query(Post).order_by(desc(Post.id))
     posts = posts.limit(30)
     rss = PyRSS2Gen.RSS2(
-        title="VINCENTSFOOTPRINT Blog Feed",
+        title="{} Feed".format(request.registry.settings["site_name"]),
         link=u"http://" + host,
-        description="VINCENTSFOOTPRINT Blog Feed",
+        description="{} Feed".format(request.registry.settings["site_name"]),
         lastBuildDate=datetime.datetime.utcnow(),
         items=[rss_item(host, p) for p in posts],
     )
@@ -144,7 +147,6 @@ def rss(request):
 
 def rss_item(host, post):
     pubdate = post.created
-    # html = publish_parts(post.content, writer_name="html")["html_body"]
     link = "http://%s/post/%s" % (host, post.url_kword)
     return PyRSS2Gen.RSSItem(
         title=post.title,

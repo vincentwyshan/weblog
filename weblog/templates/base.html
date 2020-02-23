@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="/static/favicon.ico"/>
     <title>${title}</title>
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed for vincentsfootprint.com" href="/rss" />
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for ${request.registry.settings['site_address']}" href="/rss" />
     <link rel="stylesheet" href="/static/css/site.css">
     <link rel="stylesheet" href="/static/css/font.css">
-    <meta name="description" content="Vincent Wen's footprint">
+    <meta name="description" content="${title} | ${request.registry.settings['site_name']}">
 </head>
 
 <body>
@@ -18,7 +18,7 @@
         <div class="container yue">
             <a id="brand" href="${request.registry.settings.get('site_address', '/') | n}">
                 <img src="/static/favicon.ico" />
-                <strong>VINCENT WEN'S FOOTPRINT</strong>
+                <strong>${request.registry.settings['site_name']}</strong>
             </a>
             <nav id="nav">
                 <a href="/about">${request._(u'About')}</a>
