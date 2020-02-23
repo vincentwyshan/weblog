@@ -173,6 +173,11 @@ def load_yml_index(session, index_yml: str, post_files: Dict[str, str]):
             if tag not in post.tags:
                 post.tags.append(tag)
 
+        tags = [t.lower() for t in tags]
+        remove_tags = [t for t in post.tags if t.name.lower() not in tags]
+        for t in remove_tags:
+            post.tags.remove(t)
+
         session.flush()
 
         post_ids.add(post.id)
