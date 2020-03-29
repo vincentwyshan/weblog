@@ -1,0 +1,41 @@
+#
+# SOME DESCRIPTIVE TITLE
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE 1.0\n"
+"POT-Creation-Date: 2020-03-29 22:46+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Lingua 4.14\n"
+
+#: ././weblog/templates/tags.html:6
+msgid "title-tags"
+msgstr ""
+
+#: ././weblog/templates/about.html:7 ././weblog/views/blog.py:120
+msgid "title-about"
+msgstr ""
+
+#: ././weblog/templates/base.html:23
+msgid "nav-about"
+msgstr ""
+
+#: ././weblog/templates/base.html:24
+msgid "nav-tags"
+msgstr ""
+
+#: ././weblog/templates/tags_detail.html:5
+msgid "entries_in_the"
+msgstr ""
+
+#: ././weblog/templates/tags_detail.html:6
+msgid "category"
+msgstr ""
