@@ -117,7 +117,7 @@ def tags_detail(request):
 @view_config(route_name="about")
 @cache_view(60)
 def about(request):
-    _about = _t(request, _(u"About"))
+    _about = _t(request, _(u"title-about"))
     context = dict(
         title=_about + u" | {}".format(request.registry.settings["site_name"]),
         request=request,

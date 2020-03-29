@@ -28,6 +28,8 @@ requires = [
     "pyyaml",
     "click",
     "python-dateutil",
+    "lingua",
+    "babel",
 ]
 
 

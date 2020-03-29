@@ -1,67 +1,42 @@
 #
 # SOME DESCRIPTIVE TITLE
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-01-08 00:57+0800\n"
-"PO-Revision-Date: 2017-01-08 00:58+0800\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2020-03-29 22:06+0800\n"
+"PO-Revision-Date: 2020-03-29 22:08+0800\n"
 "Language-Team: \n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Lingua 4.11\n"
-"X-Generator: Poedit 1.8.11\n"
+"Generated-By: Lingua 4.14\n"
+"X-Generator: Poedit 2.3\n"
+"Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
 
-#: build/lib/weblog/templates/base.html:24 weblog/views.py:123
-#: weblog/templates/base.html:24
-msgid "About"
+#: weblog/templates/tags.html:6
+msgid "title-tags"
+msgstr "标签"
+
+#: weblog/templates/about.html:7 weblog/views/blog.py:120
+msgid "title-about"
 msgstr "关于"
 
-#: weblog/templates/about.html:9
-msgid "关于我"
-msgstr ""
+#: weblog/templates/base.html:23
+msgid "nav-about"
+msgstr "关于"
 
-#: weblog/templates/about.html:16
-msgid ""
-"程序员，工作十余年，在数据库、Python、前端开发等领域有一些经"
-"验，热爱开源，算得上半个全栈工程师。"
-msgstr ""
-
-#: weblog/templates/about.html:17
-msgid ""
-"大部分时间主要和金融数据、金融软件打交道，开发数据处理、服务"
-"端、WEB前端、移动端软件，熟悉国内的主要金融数据供应商。"
-msgstr ""
-
-#: weblog/templates/about.html:20
-msgid "我的资源"
-msgstr ""
-
-#: weblog/templates/about.html:23
-msgid "微博"
-msgstr ""
-
-#: weblog/templates/about.html:24
-msgid "联系我"
-msgstr ""
-
-#: weblog/templates/base.html:25
-msgid "TAGS"
+#: weblog/templates/base.html:24
+msgid "nav-tags"
 msgstr "标签"
 
-#: weblog/templates/tags.html:8
-msgid "Tags"
-msgstr "标签"
-
-#: weblog/templates/tags_detail.html:7
-msgid "entries in the"
+#: weblog/templates/tags_detail.html:5
+msgid "entries_in_the"
 msgstr "篇博客文章在"
 
-#: weblog/templates/tags_detail.html:8
+#: weblog/templates/tags_detail.html:6
 msgid "category"
 msgstr "分类"
