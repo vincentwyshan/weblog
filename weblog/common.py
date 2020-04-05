@@ -15,9 +15,9 @@ img_static = namedtuple(
 img_static = img_static(
     raw="static",
     desktop_dir="static-desktop",
-    desktop_width=780,
+    desktop_width=1280,
     mobile_dir="static-mobile",
-    mobile_width=250,
+    mobile_width=500,
 )
 
 
@@ -37,6 +37,10 @@ def thumbnail(raw, max_size=800):
     im = Image.open(raw)
     im.thumbnail(size, Image.ANTIALIAS)
     out = BytesIO()
+
+    if im.mode in ('RGBA', 'LA'):
+        im = im.convert('RGB')
+
     im.save(out, "JPEG")
     return out.getvalue()
 
