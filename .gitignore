@@ -294,3 +294,5 @@ dmypy.json
 
 static-desktop/
 static-mobile/
+
+rsync.sh
